@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>यूपी मीडिया मॉनिटर | Apoorv</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans Devanagari',sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:#fff;border-bottom:3px solid #e05c00;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{width:34px;height:34px;background:linear-gradient(135deg,#f97316,#dc2626);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;font-family:'Syne',sans-serif}
+.tb-name{font-size:15px;font-weight:700;color:#1a1a1a}
+.tb-by{font-size:12px;color:#999;margin-left:4px}
+.tb-by b{color:#dc2626}
+.live-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:100px;padding:3px 10px;font-weight:600}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#16a34a;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO */
+.hero{background:linear-gradient(180deg,#fff8f5 0%,#f5f4f0 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid #e5e7eb}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;background:#fff3ed;border:1px solid #fbbf9a;border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;color:#c2410c;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-family:'Noto Sans Devanagari',sans-serif;font-size:clamp(24px,5vw,46px);font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:6px}
+.hero h1 span{color:#dc2626}
+.hero-sub{font-size:14px;color:#6b7280;max-width:500px;margin:0 auto 18px;line-height:1.8}
+.hero-owner{font-size:12px;color:#9ca3af;margin-bottom:22px}
+.hero-owner b{color:#dc2626}
+.hero-feats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.feat{font-size:12px;color:#6b7280;background:#fff;border:1px solid #e5e7eb;border-radius:100px;padding:4px 12px}
+.hero-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn-main{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#dc2626,#f97316);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-family:'Noto Sans Devanagari',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(220,38,38,.25)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(220,38,38,.35)}
+.btn-main:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-sec{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #d1d5db;color:#374151;border-radius:10px;padding:11px 20px;font-size:14px;cursor:pointer;transition:all .2s;font-family:'Noto Sans Devanagari',sans-serif}
+.btn-sec:hover{border-color:#f97316;color:#c2410c}
+.btn-sm{padding:7px 13px!important;font-size:12px!important;border-radius:7px!important}
+
+/* PROGRESS */
+#prog-box{display:none;max-width:600px;margin:24px auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.prog-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.prog-icon{width:38px;height:38px;border-radius:50%;background:#fff3ed;border:1px solid #fbbf9a;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.prog-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.prog-sub{font-size:12px;color:#9ca3af;margin-top:2px}
+.prog-bar{background:#f3f4f6;border-radius:100px;height:4px;overflow:hidden;margin-bottom:14px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#dc2626,#f97316,#f59e0b);border-radius:100px;transition:width .5s ease;width:0%}
+.log-box{display:flex;flex-direction:column;gap:7px;max-height:180px;overflow-y:auto}
+.log-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af}
+.log-item.active{color:#f97316}
+.log-item.done{color:#16a34a}
+.log-item.err{color:#dc2626}
+.log-icon{width:17px;height:17px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.log-item.active .log-icon{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MAIN WRAPPER */
+#main{display:none;max-width:1120px;margin:20px auto;padding:0 20px 80px}
+
+/* REPORT HEADER */
+.rpt-head{background:linear-gradient(135deg,#7c2d12,#c2410c,#ea580c);border-radius:14px;padding:26px 28px;margin-bottom:14px;color:#fff;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(194,65,12,.3)}
+.rpt-head::after{content:'यूपी';position:absolute;right:6px;top:4px;font-family:'Syne',sans-serif;font-size:120px;font-weight:800;color:rgba(255,255,255,.05);pointer-events:none;line-height:1}
+.rpt-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.rpt-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:3px 11px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px;font-family:'Syne',sans-serif}
+.rpt-title{font-family:'Noto Sans Devanagari',sans-serif;font-size:20px;font-weight:700;margin-bottom:4px}
+.rpt-meta{font-size:11px;opacity:.65}
+.rpt-btns{display:flex;gap:8px;flex-wrap:wrap}
+.rpt-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;transition:.2s;font-family:'Noto Sans Devanagari',sans-serif}
+.rpt-btn:hover{background:rgba(255,255,255,.22)}
+.rpt-btn-main{background:#fff;color:#c2410c;border-color:#fff}
+.rpt-btn-main:hover{background:#fff7ed}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:10px}
+.stat-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:13px;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:5px;color:#fff}
+.stat-lbl{font-size:11px;color:rgba(255,255,255,.7)}
+
+/* LIVE BAR */
+.live-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:9px 16px;margin-bottom:13px;flex-wrap:wrap;gap:8px}
+.live-bar-l{display:flex;align-items:center;gap:7px;font-size:12px;color:#6b7280}
+.live-bar-dot{width:7px;height:7px;border-radius:50%;background:#16a34a;animation:blink 3s infinite}
+.live-bar-r{font-size:11px;color:#9ca3af}
+
+/* TABS */
+.tabs{display:flex;gap:3px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:4px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;min-width:100px;background:transparent;border:none;border-radius:7px;padding:9px 10px;font-family:'Noto Sans Devanagari',sans-serif;font-size:13px;font-weight:500;color:#9ca3af;cursor:pointer;transition:.2s;white-space:nowrap}
+.tab-btn.active{background:linear-gradient(135deg,#dc2626,#f97316);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(220,38,38,.25)}
+.tab-btn:hover:not(.active){color:#374151;background:#f9fafb}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* SUMMARY */
+.sum-banner{background:#fff;border:1px solid #e5e7eb;border-left:4px solid #f97316;border-radius:8px;padding:13px 17px;font-size:14px;color:#374151;line-height:1.85;margin-bottom:13px}
+.sum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:12px}
+.sum-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:17px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.sum-card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:11px}
+.sum-item{display:flex;gap:8px;margin-bottom:9px;align-items:flex-start}
+.sum-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:8px}
+.sum-text{font-size:13px;color:#374151;line-height:1.7;word-break:break-word}
+
+/* NEWS LIST */
+.filter-row{display:flex;gap:8px;margin-bottom:13px;flex-wrap:wrap;align-items:center}
+.filter-row select{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px 11px;font-family:'Noto Sans Devanagari',sans-serif;font-size:13px;color:#374151;outline:none;cursor:pointer}
+.news-count{font-size:12px;color:#9ca3af;margin-left:auto}
+
+/* GLOBAL SEARCH BAR */
+.search-wrap{position:relative;margin-bottom:14px}
+.search-input{width:100%;border:2px solid #e5e7eb;border-radius:12px;padding:12px 44px 12px 44px;font-family:'Noto Sans Devanagari',sans-serif;font-size:14px;color:#1a1a1a;outline:none;background:#fff;transition:border-color .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.search-input:focus{border-color:#f97316;box-shadow:0 2px 12px rgba(249,115,22,.15)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none;color:#9ca3af}
+.search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;display:none;padding:2px 6px;border-radius:50%;line-height:1}
+.search-clear:hover{background:#f3f4f6;color:#374151}
+.search-stats{font-size:12px;color:#9ca3af;margin-top:-8px;margin-bottom:10px;display:none}
+.search-stats b{color:#f97316}
+.search-highlight{background:#fef9c3;border-radius:3px;padding:0 1px}
+#news-list{display:block;width:100%}
+
+/* ALERT BANNER */
+.alert-banner{position:fixed;top:60px;right:16px;z-index:999;display:flex;flex-direction:column;gap:8px;max-width:340px;pointer-events:none}
+.alert-toast{background:#fff;border:1px solid #fecaca;border-left:4px solid #dc2626;border-radius:10px;padding:12px 14px;box-shadow:0 4px 20px rgba(220,38,38,.2);pointer-events:all;animation:slideIn .3s ease;cursor:pointer}
+.alert-toast.kw{border-left-color:#7c3aed;border-color:#ddd6fe}
+@keyframes slideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+.alert-toast-title{font-size:12px;font-weight:700;color:#dc2626;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.alert-toast.kw .alert-toast-title{color:#7c3aed}
+.alert-toast-body{font-size:12px;color:#374151;line-height:1.5}
+
+/* BREAKING + ALERT badges on cards */
+.badge-breaking{background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.5px;animation:pulse-red 2s infinite}
+.badge-kw{background:#7c3aed;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 4px rgba(220,38,38,0)}}
+.news-card.breaking{border:2px solid #dc2626;border-left:4px solid #dc2626;background:linear-gradient(135deg,#fff 95%,#fef2f2)}
+.news-card.kw-match{border:2px solid #7c3aed;border-left:4px solid #7c3aed;background:linear-gradient(135deg,#fff 95%,#f5f3ff)}
+
+/* ALERTS TAB */
+.alerts-header{background:linear-gradient(135deg,#7f1d1d,#dc2626);border-radius:14px 14px 0 0;padding:18px 22px;color:#fff;margin-bottom:0}
+.alerts-header h3{font-size:16px;font-weight:700;margin-bottom:3px}
+.alerts-header p{font-size:12px;opacity:.75}
+.alerts-body{background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 14px 14px;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+
+/* KEYWORD SETTINGS */
+.kw-settings{background:#f9fafb;border-bottom:1px solid #f0f0f0;padding:16px 20px}
+.kw-title{font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.kw-input-row{display:flex;gap:8px;margin-bottom:10px}
+.kw-input{flex:1;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-family:'Noto Sans Devanagari',sans-serif;font-size:13px;outline:none}
+.kw-input:focus{border-color:#7c3aed}
+.kw-add-btn{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap}
+.kw-chips{display:flex;flex-wrap:wrap;gap:6px}
+.kw-chip{display:inline-flex;align-items:center;gap:5px;background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe;border-radius:100px;padding:3px 10px;font-size:12px;font-weight:500}
+.kw-chip-del{cursor:pointer;color:#7c3aed;font-weight:700;font-size:13px;line-height:1}
+.kw-chip-del:hover{color:#dc2626}
+
+/* ALERT CARDS */
+.alert-card{padding:14px 20px;border-bottom:1px solid #f3f4f6;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:background .15s}
+.alert-card:hover{background:#fafafa}
+.alert-card:last-child{border-bottom:none}
+.alert-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.alert-dot.breaking{background:#dc2626;animation:pulse-red 2s infinite}
+.alert-dot.kw{background:#7c3aed}
+.alert-info{flex:1}
+.alert-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.alert-label.breaking{color:#dc2626}
+.alert-label.kw{color:#7c3aed}
+.alert-text{font-size:13px;font-weight:600;color:#1a1a1a;line-height:1.55;margin-bottom:4px;word-break:break-word}
+.alert-meta{font-size:11px;color:#9ca3af}
+
+/* NEWS CARD */
+.news-card{background:#fff;border:1px solid #e5e7eb;border-left:4px solid #e5e7eb;border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:box-shadow .15s}
+.news-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.news-card.pos{border-left-color:#16a34a}
+.news-card.neg{border-left-color:#dc2626}
+.news-card.neu{border-left-color:#94a3b8}
+.news-title{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.6;margin-bottom:9px;cursor:pointer;word-break:break-word}
+.news-title:hover{color:#dc2626}
+.news-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.b-pos{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.b-neg{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.b-neu{background:#f8fafc;color:#64748b;border:1px solid #e2e8f0}
+.b-cat{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+.b-dist{background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe}
+.b-crit{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.b-high{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+.b-med{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+.b-low{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.news-meta{font-size:11px;color:#9ca3af;margin-bottom:4px}
+.expand-btn{font-size:12px;color:#f97316;background:none;border:none;cursor:pointer;padding:3px 0;font-weight:500}
+.expand-btn:hover{color:#c2410c}
+.news-body{display:none;margin-top:11px;padding-top:11px;border-top:1px solid #f3f4f6}
+.news-body.open{display:block}
+.news-summary{font-size:14px;color:#374151;line-height:1.8;margin-bottom:10px;word-break:break-word}
+.read-link{display:inline-flex;align-items:center;gap:7px;background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;text-decoration:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-top:4px;transition:.2s}
+.read-link:hover{background:#ffedd5}
+.translate-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:8px 12px;font-size:12px;color:#1d4ed8;margin-top:8px}
+
+/* SPECIAL TOPICS */
+.special-header{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:14px 14px 0 0;padding:20px 24px;color:#fff}
+.special-header h3{font-size:17px;font-weight:700;margin-bottom:4px}
+.special-header p{font-size:12px;opacity:.7}
+.special-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:3px 12px;font-size:11px;float:right;margin-top:-24px}
+.topics-container{background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 14px 14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+
+/* TOPIC ROW */
+.topic-row{border-bottom:1px solid #f3f4f6}
+.topic-row:last-child{border-bottom:none}
+.topic-header{display:flex;align-items:center;gap:10px;padding:13px 20px;background:#fafafa;cursor:pointer;user-select:none;transition:.15s}
+.topic-header:hover{background:#f3f4f6}
+.topic-icon{font-size:18px;flex-shrink:0}
+.topic-name{font-size:14px;font-weight:600;color:#1e1b4b;flex:1}
+.topic-count{font-size:11px;background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe;border-radius:100px;padding:2px 9px;font-weight:600;flex-shrink:0}
+.topic-arrow{font-size:13px;color:#9ca3af;flex-shrink:0;transition:transform .2s}
+.topic-arrow.open{transform:rotate(180deg)}
+.topic-articles{display:none;padding:10px 14px 14px;background:#fff}
+.topic-articles.open{display:block}
+
+/* TOPIC ARTICLE CARD */
+.topic-art-card{background:#f9fafb;border:1px solid #f0f0f0;border-radius:8px;padding:12px 14px;margin-bottom:8px;border-left:3px solid #94a3b8}
+.topic-art-card.pos{border-left-color:#16a34a}
+.topic-art-card.neg{border-left-color:#dc2626}
+.topic-art-title{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.6;margin-bottom:7px;cursor:pointer;word-break:break-word}
+.topic-art-title:hover{color:#dc2626}
+.topic-art-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.topic-art-meta{font-size:11px;color:#9ca3af;margin-bottom:4px}
+.topic-art-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0f0}
+.topic-art-body.open{display:block}
+.topic-art-sum{font-size:13px;color:#374151;line-height:1.75;margin-bottom:8px;word-break:break-word}
+
+/* ANALYTICS */
+.an-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:13px}
+.an-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.an-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#9ca3af;margin-bottom:13px}
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.bar-label{font-size:12px;color:#374151;width:112px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:7px;background:#f3f4f6;border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;transition:width .9s ease}
+.bar-num{font-size:12px;font-weight:600;color:#1a1a1a;min-width:24px;text-align:right}
+.donut-wrap{display:flex;align-items:center;gap:18px}
+.legend{display:flex;flex-direction:column;gap:9px}
+.leg-row{display:flex;align-items:center;gap:8px}
+.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.leg-label{font-size:13px;color:#374151;flex:1}
+.leg-val{font-size:13px;font-weight:700}
+
+/* ISSUES */
+.issues-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:13px}
+.issue-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.issue-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#9ca3af;margin-bottom:13px}
+.issue-item{display:flex;gap:10px;margin-bottom:11px;align-items:flex-start}
+.issue-num{width:25px;height:25px;border-radius:50%;background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.issue-text{font-size:13px;color:#374151;line-height:1.65;padding-top:2px;word-break:break-word}
+.rec-item{display:flex;gap:8px;margin-bottom:10px}
+.rec-arrow{color:#f97316;font-weight:700;font-size:14px;padding-top:1px;flex-shrink:0}
+
+/* FOOTER */
+.footer{text-align:center;padding:24px 0 0;font-size:12px;color:#9ca3af;border-top:1px solid #e5e7eb;margin-top:40px;line-height:1.8}
+.footer b{color:#374151}
+
+/* ERROR BOX */
+.err-box{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;font-size:13px;color:#991b1b;margin-top:12px;line-height:1.75;display:none}
+.err-box a{color:#dc2626}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease}
+
+@media(max-width:600px){.hero h1{font-size:24px}.stats-grid{grid-template-columns:repeat(3,1fr)}#main{padding:0 12px 60px}}
+@media print{.topbar,.hero,.live-bar,.tabs,.filter-row,.expand-btn,.rpt-btns,.footer{display:none!important}.news-card{border:1px solid #ddd;box-shadow:none}.rpt-head{background:#7c2d12!important;color:#fff!important}#main{display:block!important}.tab-panel{display:block!important}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">UP</div>
+    <div class="tb-name">यूपी मीडिया मॉनिटर</div>
+    <div class="tb-by">by <b>Apoorv</b></div>
+  </div>
+  <div class="live-pill"><span class="live-dot"></span>Live Agent</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button onclick="switchToAlerts()" id="alert-bell" style="position:relative;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;display:none">
+      🔔<span id="alert-count-badge" style="position:absolute;top:-6px;right:-6px;background:#dc2626;color:#fff;font-size:9px;font-weight:700;border-radius:100px;padding:1px 5px;min-width:16px;text-align:center">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- ALERT TOASTS CONTAINER -->
+<div class="alert-banner" id="alert-banner"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-chip">⚡ हिंदी · Live · Free · Daily</div>
+  <h1>उत्तर प्रदेश <span>मीडिया मॉनिटर</span></h1>
+  <div class="hero-sub">यूपी के सभी 75 जिलों की ताज़ा खबरें + 48 विशेष राष्ट्रीय विषय — पूरी तरह हिंदी में। पिछले 12 घंटे की ताज़ा खबरें।</div>
+  <div class="hero-owner">निर्मित: <b>Apoorv</b> · Google News · कोई API नहीं</div>
+  <div class="hero-feats">
+    <span class="feat">📡 Google News</span>
+    <span class="feat">⏰ पिछले 12 घंटे</span>
+    <span class="feat">🧠 भावना विश्लेषण</span>
+    <span class="feat">🗺 75 जिले</span>
+    <span class="feat">📋 48 विशेष विषय</span>
+    <span class="feat">📥 रिपोर्ट डाउनलोड</span>
+  </div>
+  <div class="hero-btns">
+    <button class="btn-main" id="gen-btn" onclick="runAgent()">⚡ आज की रिपोर्ट बनाएं</button>
+    <button class="btn-sec" onclick="loadSample()">📄 Sample देखें</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="prog-box">
+  <div class="prog-head">
+    <div class="prog-icon">📰</div>
+    <div>
+      <div class="prog-title" id="prog-title">शुरू हो रहा है...</div>
+      <div class="prog-sub" id="prog-sub">कृपया प्रतीक्षा करें</div>
+    </div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+  <div class="log-box" id="log-box"></div>
+  <div class="err-box" id="err-box"></div>
+</div>
+
+<!-- MAIN REPORT -->
+<div id="main">
+
+  <!-- Header -->
+  <div class="rpt-head">
+    <div class="rpt-top">
+      <div>
+        <div class="rpt-badge">📡 मीडिया इंटेलिजेंस · APOORV</div>
+        <div class="rpt-title">यूपी दैनिक समाचार रिपोर्ट</div>
+        <div class="rpt-meta" id="rpt-meta"></div>
+      </div>
+      <div class="rpt-btns">
+        <button class="rpt-btn" onclick="downloadReport()">⬇ डाउनलोड</button>
+        <button class="rpt-btn" onclick="window.print()">🖨 Print</button>
+        <button class="rpt-btn rpt-btn-main" onclick="runAgent()">↺ अपडेट</button>
+      </div>
+    </div>
+    <div class="stats-grid" id="stats-grid"></div>
+  </div>
+
+  <!-- Live bar -->
+  <div class="live-bar">
+    <div class="live-bar-l"><span class="live-bar-dot"></span><span id="live-txt">Live डेटा</span></div>
+    <div class="live-bar-r" id="live-next">अगला अपडेट: कल सुबह 7:00</div>
+  </div>
+
+  <!-- Global Search Bar -->
+  <div class="search-wrap" id="search-wrap" style="display:none">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search-input" 
+      placeholder="खोजें — जैसे: RSS, Lucknow, हत्या, Yogi, विकास..."
+      oninput="onSearch(this.value)"
+      onkeydown="if(event.key==='Escape'){clearSearch();}">
+    <button class="search-clear" id="search-clear" onclick="clearSearch()" title="साफ करें">×</button>
+  </div>
+  <div class="search-stats" id="search-stats"></div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('summary',this)">📋 सारांश</button>
+    <button class="tab-btn" onclick="switchTab('news',this)">📰 यूपी खबरें</button>
+    <button class="tab-btn" onclick="switchTab('alerts',this)" id="alerts-tab-btn">🔔 अलर्ट्स</button>
+    <button class="tab-btn" onclick="switchTab('special',this)">🏮 विशेष विषय</button>
+    <button class="tab-btn" onclick="switchTab('social',this)">📱 सोशल मीडिया चर्चा</button>
+    <button class="tab-btn" onclick="switchTab('print',this)">🗞 प्रिंट संस्करण</button>
+    <button class="tab-btn" onclick="switchTab('rssnational',this)">🏮 RSS राष्ट्रीय</button>
+    <button class="tab-btn" onclick="switchTab('rssawadh',this)">📍 RSS अवध प्रांत</button>
+    <button class="tab-btn" onclick="switchTab('analytics',this)">📊 Analytics</button>
+    <button class="tab-btn" onclick="switchTab('issues',this)">🎯 मुद्दे</button>
+  </div>
+
+  <!-- Summary Tab -->
+  <div class="tab-panel active" id="tab-summary">
+    <div class="sum-banner" id="sum-banner"></div>
+    <div class="sum-grid" id="sum-grid"></div>
+  </div>
+
+  <!-- Alerts Tab -->
+  <div class="tab-panel" id="tab-alerts">
+    <!-- Keyword Settings -->
+    <div class="alerts-header">
+      <h3>🔔 स्मार्ट अलर्ट्स</h3>
+      <p>Breaking news + आपके custom keywords पर तुरंत अलर्ट</p>
+    </div>
+    <div class="alerts-body">
+      <div class="kw-settings">
+        <div class="kw-title">📌 Custom Keywords — इन शब्दों वाली खबर पर 🟣 Alert</div>
+        <div class="kw-input-row">
+          <input class="kw-input" id="kw-input" placeholder="keyword लिखें जैसे: RSS, Yogi, Ayodhya..." onkeydown="if(event.key==='Enter')addKeyword()">
+          <button class="kw-add-btn" onclick="addKeyword()">+ जोड़ें</button>
+        </div>
+        <div class="kw-chips" id="kw-chips"></div>
+      </div>
+      <div id="alerts-list" style="min-height:60px"></div>
+    </div>
+  </div>
+
+  <!-- News Tab -->
+  <div class="tab-panel" id="tab-news">
+    <div class="filter-row">
+      <select id="f-sent" onchange="renderNews()">
+        <option value="">सभी भावनाएं</option>
+        <option value="सकारात्मक">✅ सकारात्मक</option>
+        <option value="नकारात्मक">⚠️ नकारात्मक</option>
+        <option value="तटस्थ">⚪ तटस्थ</option>
+      </select>
+      <select id="f-cat" onchange="renderNews()">
+        <option value="">सभी श्रेणियां</option>
+        <option>शासन</option><option>कानून व्यवस्था</option><option>विकास</option>
+        <option>अर्थव्यवस्था</option><option>शिक्षा</option><option>स्वास्थ्य</option>
+        <option>कृषि</option><option>राजनीति</option><option>पर्यावरण</option>
+        <option>सामाजिक कल्याण</option>
+      </select>
+      <select id="f-sev" onchange="renderNews()">
+        <option value="">सभी स्तर</option>
+        <option value="गंभीर">🔴 गंभीर</option>
+        <option value="उच्च">🟠 उच्च</option>
+        <option value="मध्यम">🟡 मध्यम</option>
+        <option value="सामान्य">🟢 सामान्य</option>
+      </select>
+      <span class="news-count" id="news-count"></span>
+    </div>
+    <div id="news-list"></div>
+  </div>
+
+  <!-- Special Tab -->
+  <div class="tab-panel" id="tab-special">
+    <div class="special-header">
+      <div class="special-badge" id="special-badge">लोड हो रहा है...</div>
+      <h3>🏮 विशेष राष्ट्रीय विषय</h3>
+      <p>48 महत्वपूर्ण राष्ट्रीय विषयों पर नवीनतम समाचार</p>
+    </div>
+    <div class="topics-container" id="topics-container"></div>
+  </div>
+
+  <!-- Social Media Buzz Tab -->
+  <div class="tab-panel" id="tab-social">
+    <div class="filter-row">
+      <span class="news-count" id="social-count"></span>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:13px;font-size:12px;color:#1d4ed8;line-height:1.7">
+      💡 यह सेक्शन उन UP खबरों को दिखाता है जो न्यूज़ पब्लिशर्स खुद वायरल/ट्रेंडिंग या बड़ी सार्वजनिक प्रतिक्रिया के रूप में रिपोर्ट करते हैं — पिछले 24 घंटे की।
+    </div>
+    <div id="social-list"></div>
+  </div>
+
+  <!-- Print Edition Tab -->
+  <div class="tab-panel" id="tab-print">
+    <div class="filter-row">
+      <span class="news-count" id="print-count"></span>
+    </div>
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;margin-bottom:13px;font-size:12px;color:#9a3412;line-height:1.7">
+      🗞 अमर उजाला, हिंदुस्तान, दैनिक जागरण, दैनिक भास्कर, नवभारत टाइम्स, ज़ी न्यूज़, आज तक और अन्य प्रमुख प्रकाशकों के UP सेक्शन से सीधी खबरें — पिछले 48 घंटे की।
+    </div>
+    <div id="print-list"></div>
+  </div>
+
+  <!-- RSS National Tab -->
+  <div class="tab-panel" id="tab-rssnational">
+    <div class="filter-row">
+      <span class="news-count" id="rssnational-count"></span>
+    </div>
+    <div style="background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1px solid #fbbf24;border-radius:8px;padding:10px 14px;margin-bottom:13px;font-size:12px;color:#92400e;line-height:1.7">
+      🏮 <b>राष्ट्रीय स्वयंसेवक संघ (RSS)</b> — राष्ट्रीय बैठकें, कार्यक्रम, प्रमुख नेताओं के वक्तव्य और संगठन की गतिविधियाँ। पिछले 7 दिन की ताज़ा खबरें।
+    </div>
+    <div id="rssnational-list"></div>
+  </div>
+
+  <!-- RSS Awadh Prant Tab -->
+  <div class="tab-panel" id="tab-rssawadh">
+    <div class="filter-row">
+      <span class="news-count" id="rssawadh-count"></span>
+    </div>
+    <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #60a5fa;border-radius:8px;padding:10px 14px;margin-bottom:13px;font-size:12px;color:#1e40af;line-height:1.7">
+      📍 <b>RSS अवध प्रांत</b> — लखनऊ, अयोध्या, प्रयागराज, वाराणसी क्षेत्र की RSS गतिविधियाँ। क्षेत्र प्रचारक, प्रांत प्रचारक की बैठकें व कार्यक्रम। पिछले 7 दिन।
+    </div>
+    <div id="rssawadh-list"></div>
+  </div>
+
+  <!-- Analytics Tab -->
+  <div class="tab-panel" id="tab-analytics">
+    <div class="an-grid" id="an-grid"></div>
+  </div>
+
+  <!-- Issues Tab -->
+  <div class="tab-panel" id="tab-issues">
+    <div class="issues-grid" id="issues-grid"></div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  <b>यूपी मीडिया मॉनिटर</b> · निर्मित: <b>Apoorv</b><br>
+  Google News RSS · हिंदी अनुवाद · 75 जिले · 48 विशेष विषय · पिछले 12 घंटे · बिल्कुल मुफ्त
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  NLP ENGINE
+// ═══════════════════════════════════════════
+const POS_W=['उद्घाटन','लोकार्पण','शुभारंभ','विकास','निवेश','सफलता','योजना','रोजगार','लाभ','सहायता','राहत','उन्नति','सुधार','बढ़ोतरी','निर्माण','पुरस्कार','सम्मान','उपलब्धि','करोड़','मेट्रो','एक्सप्रेसवे','पूर्ण','स्वीकृति','बेहतर','मजबूत','नया','प्रगति','सफल','जीत','विजय','inaugurat','launched','invest','award','success','scheme','relief','employment','project','complete','built','boost','approved','allocated','record','achievement','won','growth','improve','crore','welfare','benefit','free'];
+const NEG_W=['हत्या','मौत','मृत्यु','अपराध','गिरफ्तार','बलात्कार','डकैती','बाढ़','दुर्घटना','हादसा','आग','आगजनी','सूखा','विरोध','हड़ताल','धरना','भ्रष्टाचार','घोटाला','धोखाधड़ी','हमला','दंगा','हिंसा','गोलीबारी','गोली','अपहरण','अगवा','घायल','नुकसान','विस्फोट','बम','ड्रग्स','माफिया','लूट','चोरी','ठगी','फर्जी','खतरा','संकट','पीड़ित','बर्बादी','तबाही','murder','killed','dead','death','crime','arrested','rape','robbery','flood','accident','fire','drought','protest','corrupt','scam','fraud','attack','riot','violence','shoot','kidnap','missing','injured','victim','blast','bomb','drugs','gang','loot'];
+const CATS={'शासन':['सरकार','मुख्यमंत्री','योगी','कैबिनेट','मंत्री','नीति','आदेश','प्रशासन','government','minister','CM','yogi','policy','official'],'कानून व्यवस्था':['पुलिस','अपराध','गिरफ्तार','हत्या','बलात्कार','डकैती','साइबर','एसटीएफ','माफिया','police','crime','arrest','murder','rape','gang','encounter'],'विकास':['सड़क','एक्सप्रेसवे','पुल','मेट्रो','रेलवे','एयरपोर्ट','निर्माण','उद्घाटन','road','expressway','bridge','metro','railway','airport','inaugurate','infrastructure'],'अर्थव्यवस्था':['निवेश','उद्योग','रोजगार','व्यापार','बजट','करोड़','invest','industry','employment','business','crore','market'],'शिक्षा':['स्कूल','कॉलेज','परीक्षा','छात्र','शिक्षक','शिक्षा','school','university','exam','student','teacher','education'],'स्वास्थ्य':['अस्पताल','डॉक्टर','स्वास्थ्य','बीमारी','टीकाकरण','एम्स','hospital','health','disease','AIIMS','treatment','dengue'],'कृषि':['किसान','फसल','गेहूं','सिंचाई','मंडी','कृषि','farmer','crop','wheat','irrigation','agriculture'],'राजनीति':['भाजपा','सपा','बसपा','कांग्रेस','चुनाव','वोट','रैली','BJP','SP','election','vote','rally'],'पर्यावरण':['बाढ़','बारिश','सूखा','प्रदूषण','नदी','मौसम','flood','rain','drought','pollution','weather'],'सामाजिक कल्याण':['योजना','राशन','पेंशन','सब्सिडी','लाभार्थी','scheme','ration','pension','relief']};
+const DISTS={'लखनऊ':['lucknow','लखनऊ'],'आगरा':['agra','आगरा'],'कानपुर':['kanpur','कानपुर'],'प्रयागराज':['prayagraj','allahabad','प्रयागराज'],'वाराणसी':['varanasi','banaras','वाराणसी'],'अयोध्या':['ayodhya','अयोध्या'],'गोरखपुर':['gorakhpur','गोरखपुर'],'मेरठ':['meerut','मेरठ'],'नोएडा':['noida','नोएडा'],'गाजियाबाद':['ghaziabad','गाजियाबाद'],'अलीगढ़':['aligarh','अलीगढ़'],'बरेली':['bareilly','बरेली'],'मुरादाबाद':['moradabad','मुरादाबाद'],'झांसी':['jhansi','झांसी'],'आजमगढ़':['azamgarh','आजमगढ़'],'बहराइच':['bahraich','बहराइच'],'रायबरेली':['rae bareli','रायबरेली'],'उन्नाव':['unnao','उन्नाव'],'गोंडा':['gonda','गोंडा'],'मथुरा':['mathura','मथुरा'],'सहारनपुर':['saharanpur','सहारनपुर'],'मुजफ्फरनगर':['muzaffarnagar','मुजफ्फरनगर'],'मिर्जापुर':['mirzapur','मिर्जापुर'],'जौनपुर':['jaunpur','जौनपुर'],'गाजीपुर':['ghazipur','गाजीपुर'],'फतेहपुर':['fatehpur','फतेहपुर'],'कुशीनगर':['kushinagar','कुशीनगर'],'देवरिया':['deoria','देवरिया'],'मऊ':['mau','मऊ'],'बस्ती':['basti','बस्ती'],'इटावा':['etawah','इटावा'],'बिजनौर':['bijnor','बिजनौर'],'चित्रकूट':['chitrakoot','चित्रकूट'],'महाराजगंज':['maharajganj','महाराजगंज']};
+
+function getDist(t){const l=t.toLowerCase();for(const[h,ks]of Object.entries(DISTS)){if(ks.some(k=>l.includes(k)))return h;}return'सम्पूर्ण यूपी';}
+function getCat(t){const l=t.toLowerCase();let b='शासन',top=0;for(const[c,ws]of Object.entries(CATS)){const s=ws.filter(w=>l.includes(w.toLowerCase())).length;if(s>top){top=s;b=c;}}return b;}
+function getSent(t){
+  const l=t.toLowerCase();
+  const p=POS_W.filter(w=>l.includes(w.toLowerCase())).length;
+  const n=NEG_W.filter(w=>l.includes(w.toLowerCase())).length;
+  if(p===0&&n===0){
+    if(/inaugurat|launch|develop|award|success|complet|built|crore|scheme|welfare|record|won|growth/.test(l))return{s:'सकारात्मक',sc:45};
+    if(/murder|kill|dead|death|crime|arrest|rape|robbery|flood|accident|fire|protest|fraud|attack|riot|missing|blast/.test(l))return{s:'नकारात्मक',sc:-45};
+    return{s:'तटस्थ',sc:0};
+  }
+  if(p>n)return{s:'सकारात्मक',sc:Math.min(35+p*12,92)};
+  if(n>p)return{s:'नकारात्मक',sc:Math.max(-35-n*12,-92)};
+  return{s:'तटस्थ',sc:0};
+}
+function getSev(t,s){
+  const l=t.toLowerCase();
+  if(/terror|blast|riot|दंगा|हत्याकांड/.test(l))return'गंभीर';
+  if(/murder|dead|death|accident|flood|fire|rape|shoot|हत्या|मौत|दुर्घटना|बाढ़|आग/.test(l))return'उच्च';
+  if(s==='नकारात्मक')return'मध्यम';
+  return'सामान्य';
+}
+function processItem(item){
+  const full=(item.title||'')+(item.desc||'');
+  const{s,sc}=getSent(full);
+  const cat=getCat(full);
+  const dist=getDist(full);
+  const sev=getSev(full,s);
+  const sum=item.desc&&item.desc.length>20?(item.desc.length>280?item.desc.slice(0,280)+'…':item.desc):item.title;
+
+  // Show relative time: "2 घंटे पहले", "35 मिनट पहले", "अभी"
+  let pt='';
+  if(item.pubDate){
+    const pub=new Date(item.pubDate).getTime();
+    if(!isNaN(pub)){
+      const diffMs=Date.now()-pub;
+      const diffMin=Math.floor(diffMs/60000);
+      const diffHr=Math.floor(diffMs/3600000);
+      const diffDay=Math.floor(diffMs/86400000);
+      if(diffMin<2) pt='अभी';
+      else if(diffMin<60) pt=diffMin+' मिनट पहले';
+      else if(diffHr<24) pt=diffHr+' घंटे पहले';
+      else if(diffDay<7) pt=diffDay+' दिन पहले';
+      else pt=new Date(item.pubDate).toLocaleString('hi-IN',{month:'short',day:'numeric'});
+    }
+  }
+  return{title:item.title||'',source:item.source||'Google News',link:item.link||'',pubDate:item.pubDate||'',pubTime:pt,district:dist,category:cat,sentiment:s,score:sc,severity:sev,summary:sum};
+}
+function dedup(arts){
+  const seen=new Set();
+  return arts.filter(a=>{const k=(a.title||'').replace(/\W/g,'').toLowerCase().slice(0,40);if(seen.has(k))return false;seen.add(k);return true;});
+}
+function genSummary(arts){
+  const pos=arts.filter(a=>a.sentiment==='सकारात्मक');
+  const neg=arts.filter(a=>a.sentiment==='नकारात्मक');
+  const tot=arts.length;
+  const pp=tot?Math.round(pos.length/tot*100):0;
+  const np=tot?Math.round(neg.length/tot*100):0;
+  const catC={},distC={};
+  arts.forEach(a=>{catC[a.category]=(catC[a.category]||0)+1;distC[a.district]=(distC[a.district]||0)+1;});
+  const topCat=Object.entries(catC).sort((a,b)=>b[1]-a[1])[0]?.[0]||'शासन';
+  const topDist=Object.entries(distC).sort((a,b)=>b[1]-a[1])[0]?.[0]||'लखनऊ';
+  const overall=pos.length>neg.length?'सकारात्मक':neg.length>pos.length?'नकारात्मक':'तटस्थ';
+  const crit=arts.filter(a=>a.severity==='गंभीर');
+  const high=arts.filter(a=>a.severity==='उच्च');
+  return{
+    kp:pos.slice(0,5).map(a=>a.title),
+    kn:neg.slice(0,5).map(a=>a.title),
+    mc:[...crit.slice(0,2).map(a=>'⚠ '+a.district+': '+a.title),...high.slice(0,2).map(a=>a.district+': '+a.title),neg.length>3?neg.length+' नकारात्मक खबरें आज':high.length+' उच्च गंभीरता की घटनाएं'].filter(Boolean).slice(0,3),
+    et:["'"+topCat+"' आज की प्रमुख श्रेणी — "+(catC[topCat]||0)+' खबरें',topDist+' में सर्वाधिक कवरेज',pos.length>neg.length?'सकारात्मक माहौल — विकास की खबरें प्रमुख':'नकारात्मक — घटनाओं की खबरें प्रमुख'],
+    ti:[...neg.filter(a=>['गंभीर','उच्च'].includes(a.severity)).map(a=>a.title),...neg.map(a=>a.title)].filter((v,i,a)=>a.indexOf(v)===i).slice(0,5),
+    rec:[high.length>0?high.length+' उच्च गंभीरता पर तुरंत बयान जारी करें':'सकारात्मक संचार बनाए रखें',topDist+' पर विशेष ध्यान — सर्वाधिक कवरेज',crit.length>0?crit.length+' गंभीर घटना पर तत्काल कार्रवाई':'आज कोई गंभीर घटना नहीं','सरकारी उपलब्धियों पर प्रेस विज्ञप्ति जारी करें'],
+    ms:'आज यूपी मीडिया में '+tot+' खबरों का विश्लेषण — '+pp+'% सकारात्मक, '+np+'% नकारात्मक। "'+topCat+'" श्रेणी में '+(catC[topCat]||0)+' खबरें। '+topDist+' सर्वाधिक कवरेज। कुल भावना: '+overall+'।',
+    kt:[tot+' यूपी खबरें — '+Object.keys(distC).length+' जिलों से',pp+'% सकारात्मक · '+np+'% नकारात्मक · '+overall,crit.length>0?'⚠ '+crit.length+' गंभीर घटना':'कोई गंभीर घटना नहीं — '+high.length+' उच्च स्तर'],
+    os:overall
+  };
+}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let DATA=null;
+
+// ═══════════════════════════════════════════
+//  ALERT ENGINE
+// ═══════════════════════════════════════════
+
+// Breaking news auto-detection keywords
+const BREAKING_KW = [
+  // Critical crimes & violence
+  'हत्याकांड','नरसंहार','दंगा','riot','blast','विस्फोट','बम','bomb',
+  'आतंकी','terrorist','encounter','मुठभेड़','firing','गोलीबारी',
+  // Natural disasters
+  'बाढ़','flood','भूकंप','earthquake','तूफान','cyclone',
+  // Major accidents
+  'बड़ा हादसा','mass casualty','multiple dead','कई मौतें',
+  // Political/Admin critical
+  'राष्ट्रपति शासन','curfew','कर्फ्यू','section 144','धारा 144',
+  'high alert','हाई अलर्ट','emergency','आपातकाल',
+  // Medical
+  'epidemic','महामारी','outbreak','disease outbreak',
+];
+
+// Keywords that indicate HIGH severity even without above words
+const HIGH_KW = [
+  'murder','हत्या','killed','मारा गया','dead body','शव मिला',
+  'rape','बलात्कार','kidnap','अपहरण','missing child','बच्चा लापता',
+  'crores scam','करोड़ घोटाला','arrested ias','IAS गिरफ्तार',
+  'minister arrested','मंत्री गिरफ्तार','MLA arrested','विधायक गिरफ्तार',
+];
+
+// Alert state
+var ALERTS = [];          // [{type:'breaking'|'keyword', title, source, time, link, kw?}]
+var USER_KEYWORDS = [];   // Custom keywords from user input
+
+function isBreaking(text) {
+  const l = text.toLowerCase();
+  return BREAKING_KW.some(k => l.includes(k.toLowerCase()));
+}
+function isHighAlert(text) {
+  const l = text.toLowerCase();
+  return HIGH_KW.some(k => l.includes(k.toLowerCase()));
+}
+function matchesUserKW(text) {
+  if (!USER_KEYWORDS.length) return null;
+  const l = text.toLowerCase();
+  return USER_KEYWORDS.find(k => l.includes(k.toLowerCase())) || null;
+}
+
+// Check all articles for alerts
+function detectAlerts(articles) {
+  var newAlerts = [];
+  articles.forEach(function(a) {
+    var full = a.title + ' ' + a.summary;
+    var breaking = isBreaking(full) || a.severity === 'गंभीर';
+    var high = isHighAlert(full) || a.severity === 'उच्च';
+    var kwMatch = matchesUserKW(full);
+    if (breaking) {
+      newAlerts.push({type:'breaking', title:a.title, source:a.source, time:a.pubTime, link:a.link, level:'critical'});
+    } else if (high) {
+      newAlerts.push({type:'breaking', title:a.title, source:a.source, time:a.pubTime, link:a.link, level:'high'});
+    }
+    if (kwMatch) {
+      newAlerts.push({type:'keyword', title:a.title, source:a.source, time:a.pubTime, link:a.link, kw:kwMatch, level:'kw'});
+    }
+  });
+  // Dedup by title
+  var seen = new Set();
+  return newAlerts.filter(function(a) {
+    if (seen.has(a.title)) return false; seen.add(a.title); return true;
+  });
+}
+
+// Show toast notifications (top 3 most critical)
+function showToasts(alerts) {
+  var banner = document.getElementById('alert-banner');
+  if (!banner) return;
+  banner.innerHTML = '';
+  var toShow = alerts.slice(0, 3);
+  toShow.forEach(function(al, i) {
+    var toast = document.createElement('div');
+    toast.className = 'alert-toast' + (al.type==='keyword' ? ' kw' : '');
+    toast.onclick = function() { switchToAlerts(); toast.remove(); };
+    toast.innerHTML = '<div class="alert-toast-title">'
+      + (al.type==='breaking' ? '🔴 BREAKING' : '🟣 KEYWORD: '+al.kw.toUpperCase())
+      + '</div><div class="alert-toast-body">' + al.title + '</div>';
+    banner.appendChild(toast);
+    // Auto-dismiss after 8 seconds
+    setTimeout(function() { if(toast.parentNode) toast.remove(); }, 8000 + i*1000);
+  });
+}
+
+// Update alert badge count
+function updateAlertBadge(count) {
+  var badge = document.getElementById('alert-count-badge');
+  var bell = document.getElementById('alert-bell');
+  var tabBtn = document.getElementById('alerts-tab-btn');
+  if (badge) badge.textContent = count;
+  if (bell) bell.style.display = count > 0 ? 'block' : 'none';
+  if (tabBtn) {
+    tabBtn.textContent = count > 0 ? '🔔 अलर्ट्स (' + count + ')' : '🔔 अलर्ट्स';
+    if (count > 0) tabBtn.style.color = '#dc2626';
+  }
+}
+
+// Render Alerts tab
+function renderAlerts() {
+  var list = document.getElementById('alerts-list');
+  if (!list) return;
+  if (!ALERTS.length) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">'
+      + '✅ कोई Breaking News या Keyword Match नहीं।<br>रिपोर्ट बनाने पर अलर्ट यहाँ दिखेंगे।</div>';
+    return;
+  }
+  list.innerHTML = '';
+  ALERTS.forEach(function(al) {
+    var card = document.createElement('div');
+    card.className = 'alert-card';
+    card.onclick = function() { if(al.link && al.link.startsWith('http')) window.open(al.link,'_blank'); };
+    var dotCls = al.type==='keyword' ? 'kw' : 'breaking';
+    var labelCls = al.type==='keyword' ? 'kw' : 'breaking';
+    var labelText = al.type==='keyword'
+      ? '🟣 KEYWORD MATCH — ' + al.kw.toUpperCase()
+      : (al.level==='critical' ? '🔴 BREAKING NEWS' : '🟠 HIGH ALERT');
+    card.innerHTML = '<div class="alert-dot '+dotCls+'"></div>'
+      + '<div class="alert-info">'
+      + '<div class="alert-label '+labelCls+'">'+labelText+'</div>'
+      + '<div class="alert-text">'+al.title+'</div>'
+      + '<div class="alert-meta">'+al.source+(al.time?' · '+al.time:'')+'</div>'
+      + '</div>'
+      + (al.link&&al.link.startsWith('http') ? '<div style="font-size:11px;color:#9ca3af;flex-shrink:0;padding-top:3px">↗</div>' : '');
+    list.appendChild(card);
+  });
+}
+
+// Keyword management
+function addKeyword() {
+  var inp = document.getElementById('kw-input');
+  var val = inp.value.trim();
+  if (!val || USER_KEYWORDS.includes(val.toLowerCase())) { inp.value=''; return; }
+  USER_KEYWORDS.push(val.toLowerCase());
+  inp.value = '';
+  renderKeywordChips();
+  // Re-run alert detection if data exists
+  if (DATA && DATA.articles) {
+    ALERTS = detectAlerts(DATA.articles);
+    updateAlertBadge(ALERTS.length);
+    renderAlerts();
+    if (ALERTS.length) showToasts(ALERTS.filter(function(a){return a.type==='keyword';}));
+  }
+}
+
+function removeKeyword(kw) {
+  USER_KEYWORDS = USER_KEYWORDS.filter(function(k){ return k !== kw; });
+  renderKeywordChips();
+  if (DATA && DATA.articles) {
+    ALERTS = detectAlerts(DATA.articles);
+    updateAlertBadge(ALERTS.length);
+    renderAlerts();
+  }
+}
+
+function renderKeywordChips() {
+  var chips = document.getElementById('kw-chips');
+  if (!chips) return;
+  chips.innerHTML = '';
+  if (!USER_KEYWORDS.length) {
+    chips.innerHTML = '<div style="font-size:12px;color:#9ca3af">कोई keyword नहीं — ऊपर जोड़ें</div>';
+    return;
+  }
+  USER_KEYWORDS.forEach(function(kw) {
+    var chip = document.createElement('div');
+    chip.className = 'kw-chip';
+    chip.innerHTML = kw + '<span class="kw-chip-del" onclick="removeKeyword(\''+kw+'\')">×</span>';
+    chips.appendChild(chip);
+  });
+}
+
+function switchToAlerts() {
+  var btn = document.getElementById('alerts-tab-btn');
+  if (btn) { switchTab('alerts', btn); }
+}
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function setBar(p){document.getElementById('prog-fill').style.width=p+'%';}
+function setProg(t,s){document.getElementById('prog-title').textContent=t;if(s)document.getElementById('prog-sub').textContent=s;}
+function addLog(msg,state){
+  state=state||'active';
+  var el=document.createElement('div');
+  el.className='log-item '+state;
+  el.innerHTML='<div class="log-icon">'+(state==='done'?'✓':state==='err'?'✗':'↺')+'</div><span>'+msg+'</span>';
+  document.getElementById('log-box').appendChild(el);
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  return document.getElementById('log-box').children.length-1;
+}
+function updLog(i,msg,state){
+  var items=document.getElementById('log-box').children;
+  if(!items[i])return;
+  items[i].className='log-item '+state;
+  items[i].querySelector('.log-icon').textContent=state==='done'?'✓':state==='err'?'✗':'↺';
+  items[i].querySelector('span').textContent=msg;
+}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+  btn.classList.add('active');
+  var panel=document.getElementById('tab-'+name);
+  if(panel){panel.style.display='block';panel.classList.add('active');}
+}
+var tick=function(ms){return new Promise(function(r){setTimeout(r,ms||80);});};
+
+// ═══════════════════════════════════════════
+//  MAIN AGENT
+// ═══════════════════════════════════════════
+async function runAgent(){
+  var btn=document.getElementById('gen-btn');
+  btn.disabled=true;
+  document.getElementById('main').style.display='none';
+  document.getElementById('prog-box').style.display='block';
+  document.getElementById('log-box').innerHTML='';
+  document.getElementById('err-box').style.display='none';
+  setBar(5);
+
+  var now=new Date();
+  var ist=new Date(now.getTime()+5.5*3600000);
+  var pad=function(n){return String(n).padStart(2,'0');};
+  var ds=ist.getFullYear()+'-'+pad(ist.getMonth()+1)+'-'+pad(ist.getDate());
+  var ts=pad(ist.getHours())+':'+pad(ist.getMinutes())+' IST';
+  var rd=ist.toLocaleDateString('hi-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  var rid='UP-'+ds.replace(/-/g,'')+'-'+Math.floor(Math.random()*9000+1000);
+
+  setProg('यूपी की ताज़ा खबरें ला रहे हैं...','पिछले 12 घंटे की खबरें');
+
+  // ── STEP 1: UP News ──
+  var l0=addLog('यूपी न्यूज़ API से खबरें मंगा रहे हैं...');
+  setBar(12);
+  var upRaw=[];
+  try{
+    var r1=await fetch('/.netlify/functions/upnews',{signal:AbortSignal.timeout(27000)});
+    if(!r1.ok)throw new Error('Status '+r1.status);
+    var j1=await r1.json();
+    upRaw=j1.items||[];
+    updLog(l0,'✓ '+upRaw.length+' यूपी खबरें मिलीं (पिछले 12 घंटे)','done');
+    setBar(38);
+  }catch(e){
+    updLog(l0,'यूपी API Error: '+e.message,'err');
+    document.getElementById('err-box').style.display='block';
+    document.getElementById('err-box').innerHTML='<b>❌ Error: '+e.message+'</b><br><br>Netlify पर deploy करें — <a href="https://netlify.com" target="_blank">netlify.com</a> पर जाएं → Free account → Deploy manually → apoorv-up-agent folder drop करें।<br><br>अभी <b>"📄 Sample देखें"</b> click करें।';
+    btn.disabled=false;
+    return;
+  }
+
+  // ── STEP 2: Special Topics ──
+  var l1=addLog('48 विशेष विषयों की खबरें ला रहे हैं...');
+  setBar(45);
+  var specialRaw=[];
+  try{
+    var r2=await fetch('/.netlify/functions/special',{signal:AbortSignal.timeout(27000)});
+    if(!r2.ok)throw new Error('Status '+r2.status);
+    var j2=await r2.json();
+    specialRaw=j2.items||[];
+    updLog(l1,'✓ '+specialRaw.length+' विशेष विषय खबरें मिलीं','done');
+    setBar(65);
+  }catch(e){
+    updLog(l1,'विशेष topics: '+e.message+' — जारी रख रहे हैं','err');
+    setBar(65);
+  }
+
+  // ── STEP 2.5: Social Buzz + Print Edition ──
+  var l1b=addLog('सोशल मीडिया चर्चा और प्रिंट संस्करण ला रहे हैं...');
+  var socialRaw=[],printRaw=[],rssNatRaw=[],rssAwadhRaw=[];
+  try{
+    var r3=await fetch('/.netlify/functions/extras',{signal:AbortSignal.timeout(27000)});
+    if(!r3.ok)throw new Error('Status '+r3.status);
+    var j3=await r3.json();
+    socialRaw=j3.socialItems||[];
+    printRaw=j3.printItems||[];
+    rssNatRaw=j3.rssNationalItems||[];
+    rssAwadhRaw=j3.rssAwadhItems||[];
+    updLog(l1b,'✓ '+socialRaw.length+' सोशल · '+printRaw.length+' प्रिंट · '+rssNatRaw.length+' RSS राष्ट्रीय · '+rssAwadhRaw.length+' RSS अवध','done');
+    setBar(70);
+  }catch(e){
+    updLog(l1b,'Extras: '+e.message+' — जारी रख रहे हैं','err');
+    setBar(70);
+  }
+
+  // ── STEP 3: Process ──
+  var l2=addLog('भावना विश्लेषण और वर्गीकरण...');
+  await tick();
+  var articles=dedup(upRaw.map(processItem));
+  var pos=articles.filter(function(a){return a.sentiment==='सकारात्मक';});
+  var neg=articles.filter(function(a){return a.sentiment==='नकारात्मक';});
+  var neu=articles.filter(function(a){return a.sentiment==='तटस्थ';});
+  updLog(l2,articles.length+' यूपी · '+pos.length+' सकारात्मक · '+neg.length+' नकारात्मक','done');
+  setBar(78);
+
+  // ── STEP 4: Group special ──
+  var l3=addLog('विशेष विषय वर्गीकृत कर रहे हैं...');
+  await tick();
+  var specialGrouped={};
+  specialRaw.forEach(function(item){
+    var lbl=item.label||'अन्य';
+    if(!specialGrouped[lbl])specialGrouped[lbl]=[];
+    var processed=processItem(item);
+    processed.label=lbl; // preserve label
+    specialGrouped[lbl].push(processed);
+  });
+  updLog(l3,Object.keys(specialGrouped).length+' विशेष विषय तैयार','done');
+  setBar(85);
+
+  // ── STEP 4.5: Process social + print ──
+  var socialArticles=dedup(socialRaw.map(processItem));
+  var printArticles=dedup(printRaw.map(processItem));
+  var rssNatArticles=dedup(rssNatRaw.map(processItem));
+  var rssAwadhArticles=dedup(rssAwadhRaw.map(processItem));
+  setBar(88);
+
+  // ── STEP 5: Summary ──
+  var l4=addLog('एग्जीक्यूटिव सारांश बना रहे हैं...');
+  await tick();
+  var sum=genSummary(articles);
+  updLog(l4,'सारांश तैयार ✓','done');
+  setBar(97);
+
+  var catC={},distC={},sevC={'गंभीर':0,'उच्च':0,'मध्यम':0,'सामान्य':0};
+  articles.forEach(function(a){
+    catC[a.category]=(catC[a.category]||0)+1;
+    distC[a.district]=(distC[a.district]||0)+1;
+    if(a.severity)sevC[a.severity]=(sevC[a.severity]||0)+1;
+  });
+  var tot=articles.length;
+
+  DATA={rid:rid,ds:ds,rd:rd,ts:ts,articles:articles,pos:pos,neg:neg,neu:neu,sum:sum,specialGrouped:specialGrouped,
+    socialArticles:socialArticles,printArticles:printArticles,
+    rssNatArticles:rssNatArticles,rssAwadhArticles:rssAwadhArticles,
+    an:{total:tot,pos:pos.length,neg:neg.length,neu:neu.length,
+      pp:tot?Math.round(pos.length/tot*100):0,np:tot?Math.round(neg.length/tot*100):0,nup:tot?Math.round(neu.length/tot*100):0,
+      sev:sevC,
+      cats:Object.entries(catC).sort(function(a,b){return b[1]-a[1];}).map(function(x){return{c:x[0],n:x[1]};}),
+      dists:Object.entries(distC).sort(function(a,b){return b[1]-a[1];}).slice(0,12).map(function(x){return{d:x[0],c:x[1]};})
+    }
+  };
+
+  setBar(100);
+  addLog('✅ रिपोर्ट तैयार! '+tot+' यूपी + '+specialRaw.length+' विशेष + '+socialArticles.length+' सोशल + '+printArticles.length+' प्रिंट','done');
+  await tick(600);
+  document.getElementById('prog-box').style.display='none';
+  renderAll();
+  btn.disabled=false;
+}
+
+// ═══════════════════════════════════════════
+//  RENDER ALL
+// ═══════════════════════════════════════════
+function renderAll(){
+  if(!DATA)return;
+  var d=DATA,an=d.an,sum=d.sum;
+
+  // Show main
+  document.getElementById('main').style.display='block';
+  document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Reset tabs — show summary
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+  document.querySelector('.tab-btn').classList.add('active');
+  var sumPanel=document.getElementById('tab-summary');
+  sumPanel.style.display='block';sumPanel.classList.add('active');
+
+  // Meta
+  document.getElementById('rpt-meta').textContent=d.rd+' · '+d.ts+' · '+d.rid+' · Apoorv';
+  document.getElementById('live-txt').textContent='Live डेटा · '+an.total+' यूपी · '+Object.keys(d.specialGrouped).length+' विशेष · '+((d.rssNatArticles||[]).length+(d.rssAwadhArticles||[]).length)+' RSS · '+d.ts;
+
+  // Stats
+  var sc=sum.os==='सकारात्मक'?'#86efac':sum.os==='नकारात्मक'?'#fca5a5':'#e2e8f0';
+  document.getElementById('stats-grid').innerHTML=
+    '<div class="stat-card"><div class="stat-num">'+an.total+'</div><div class="stat-lbl">कुल खबरें</div></div>'+
+    '<div class="stat-card"><div class="stat-num" style="color:#86efac">'+an.pos+'</div><div class="stat-lbl">सकारात्मक '+an.pp+'%</div></div>'+
+    '<div class="stat-card"><div class="stat-num" style="color:#fca5a5">'+an.neg+'</div><div class="stat-lbl">नकारात्मक '+an.np+'%</div></div>'+
+    '<div class="stat-card"><div class="stat-num" style="color:#e2e8f0">'+an.neu+'</div><div class="stat-lbl">तटस्थ</div></div>'+
+    '<div class="stat-card"><div class="stat-num" style="color:#fca5a5;font-size:22px">'+an.sev['गंभीर']+'</div><div class="stat-lbl">गंभीर</div></div>'+
+    '<div class="stat-card"><div class="stat-num" style="color:#fdba74;font-size:22px">'+an.sev['उच्च']+'</div><div class="stat-lbl">उच्च</div></div>'+
+    '<div class="stat-card"><div class="stat-num" style="color:'+sc+';font-size:16px;margin-top:7px">'+sum.os+'</div><div class="stat-lbl">भावना</div></div>';
+
+  renderSummary();
+  renderNews();
+  // Run alert detection on all articles
+  ALERTS = detectAlerts(DATA.articles);
+  updateAlertBadge(ALERTS.length);
+  renderAlerts();
+  renderKeywordChips();
+  if(ALERTS.length) showToasts(ALERTS);
+  renderSpecial();
+  renderSocial();
+  renderPrint();
+  renderRSSNational();
+  renderRSSAwadh();
+  renderAnalytics();
+  renderIssues();
+
+  // Show search bar
+  var sw=document.getElementById('search-wrap');
+  if(sw)sw.style.display='block';
+}
+
+// ═══════════════════════════════════════════
+//  SEARCH ENGINE
+// ═══════════════════════════════════════════
+var SEARCH_QUERY = '';
+
+function onSearch(val){
+  SEARCH_QUERY = val.trim().toLowerCase();
+  var clearBtn = document.getElementById('search-clear');
+  var stats = document.getElementById('search-stats');
+  if(clearBtn) clearBtn.style.display = SEARCH_QUERY ? 'block' : 'none';
+
+  if(!SEARCH_QUERY){
+    if(stats){ stats.style.display='none'; }
+    renderNews();
+    return;
+  }
+
+  // Search across ALL loaded articles
+  var results = searchAllArticles(SEARCH_QUERY);
+  var total = results.length;
+
+  if(stats){
+    stats.style.display = 'block';
+    stats.innerHTML = total > 0
+      ? '🔍 <b>'+total+'</b> खबरें मिलीं "<b>'+escHtml(val.trim())+'</b>" के लिए'
+      : '😕 "<b>'+escHtml(val.trim())+'</b>" से कोई खबर नहीं मिली — दूसरा keyword try करें';
+  }
+
+  // Switch to news tab by ID (not position-dependent)
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+  // Find news tab button
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    if(b.textContent.includes('यूपी खबरें')) b.classList.add('active');
+  });
+  var newsPanel = document.getElementById('tab-news');
+  if(newsPanel){newsPanel.style.display='block';newsPanel.classList.add('active');}
+
+  renderSearchResults(results, val.trim());
+}
+
+function searchAllArticles(query){
+  if(!DATA) return [];
+  var all = [];
+
+  function addArts(arr, src){
+    (arr||[]).forEach(function(a){
+      if(matchArticle(a, query)) all.push({a:a, src:src});
+    });
+  }
+
+  addArts(DATA.articles,         'यूपी खबरें');
+  addArts(DATA.socialArticles,   'सोशल मीडिया');
+  addArts(DATA.printArticles,    'प्रिंट संस्करण');
+  addArts(DATA.rssNatArticles,   'RSS राष्ट्रीय');
+  addArts(DATA.rssAwadhArticles, 'RSS अवध');
+
+  // Special topics
+  var sg = DATA.specialGrouped || {};
+  Object.entries(sg).forEach(function(entry){
+    var label=entry[0], arts=entry[1];
+    addArts(arts, '🏮 '+label);
+  });
+
+  // Dedup by title
+  var seen = new Set();
+  return all.filter(function(item){
+    var k = (item.a.title||'').replace(/\W/g,'').toLowerCase().slice(0,42);
+    if(seen.has(k)) return false; seen.add(k); return true;
+  });
+}
+
+function matchArticle(a, query){
+  // Search in title + summary + source + district + category
+  var text = [
+    a.title||'',
+    a.summary||'',
+    a.desc||'',
+    a.source||'',
+    a.district||'',
+    a.category||''
+  ].join(' ').toLowerCase();
+
+  var words = query.split(/\s+/).filter(Boolean);
+
+  // If single word — simple includes
+  if(words.length === 1) return text.includes(words[0]);
+
+  // Multi-word: try ALL words match first, then ANY word match
+  var allMatch = words.every(function(w){ return text.includes(w); });
+  if(allMatch) return true;
+
+  // Fallback: ANY word matches (for broader results)
+  return words.some(function(w){ return w.length > 2 && text.includes(w); });
+}
+
+function highlightText(text, query){
+  if(!query || !text) return escHtml(text);
+  var words = query.split(/\s+/).filter(Boolean);
+  var result = escHtml(text);
+  words.forEach(function(w){
+    if(!w) return;
+    try{
+      var re = new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+      result = result.replace(re, '<span class="search-highlight">$1</span>');
+    }catch(_){}
+  });
+  return result;
+}
+
+function renderSearchResults(results, query){
+  document.getElementById('news-count').textContent = results.length + ' खबरें मिलीं';
+  var list = document.getElementById('news-list');
+  list.innerHTML = '';
+
+  if(!results.length){
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#9ca3af">'
+      +'<div style="font-size:40px;margin-bottom:12px">🔍</div>'
+      +'<div style="font-size:15px;font-weight:600;color:#374151;margin-bottom:6px">कोई खबर नहीं मिली</div>'
+      +'<div style="font-size:13px">"'+escHtml(query)+'" से related कोई news नहीं है।<br>दूसरा keyword try करें।</div>'
+      +'</div>';
+    return;
+  }
+
+  results.forEach(function(item, i){
+    var a = item.a;
+    var src = item.src;
+    var sentCls = a.sentiment==='सकारात्मक'?'pos':a.sentiment==='नकारात्मक'?'neg':'neu';
+    var bsent = a.sentiment==='सकारात्मक'?'b-pos':a.sentiment==='नकारात्मक'?'b-neg':'b-neu';
+    var score = a.score>0?'+'+a.score:String(a.score||0);
+    var hasLink = a.link&&a.link.startsWith('http');
+    var fullText = (a.title||'')+' '+(a.summary||a.desc||'');
+    var isBreakingNews = isBreaking(fullText) || a.severity==='गंभीर';
+    var kwHit = matchesUserKW(fullText);
+
+    var card = document.createElement('div');
+    var cardCls = 'news-card '+sentCls+' fade-in';
+    if(isBreakingNews) cardCls = 'news-card breaking fade-in';
+    else if(kwHit) cardCls = 'news-card kw-match fade-in';
+    card.className = cardCls;
+
+    // Title with highlight
+    var title = document.createElement('div');
+    title.className = 'news-title';
+    title.innerHTML = highlightText(a.title||'', query);
+    title.onclick = function(){ toggleSearchCard('s'+i); };
+    card.appendChild(title);
+
+    // Badges
+    var badges = document.createElement('div');
+    badges.className = 'news-badges';
+    var extraB = '';
+    if(isBreakingNews) extraB += '<span class="badge badge-breaking">🔴 BREAKING</span>';
+    if(kwHit) extraB += '<span class="badge badge-kw">🟣 '+kwHit.toUpperCase()+'</span>';
+    extraB += '<span class="badge" style="background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;font-size:10px">📁 '+escHtml(src)+'</span>';
+    badges.innerHTML = extraB
+      +'<span class="badge '+bsent+'">'+a.sentiment+' ('+score+')</span>'
+      +'<span class="badge '+sevBadge(a.severity||'सामान्य')+'">'+a.severity+'</span>'
+      +'<span class="badge b-cat">'+(a.category||'')+'</span>'
+      +'<span class="badge b-dist">'+(a.district||'')+'</span>';
+    card.appendChild(badges);
+
+    var meta = document.createElement('div');
+    meta.className = 'news-meta';
+    meta.textContent = (a.source||'')+(a.pubTime?' · '+a.pubTime:'');
+    card.appendChild(meta);
+
+    var expBtn = document.createElement('button');
+    expBtn.className = 'expand-btn';
+    expBtn.id = 'sebtn-s'+i;
+    expBtn.textContent = '▾ विवरण देखें';
+    expBtn.onclick = function(){ toggleSearchCard('s'+i); };
+    card.appendChild(expBtn);
+
+    var body = document.createElement('div');
+    body.className = 'news-body';
+    body.id = 'snbody-s'+i;
+
+    var sumDiv = document.createElement('div');
+    sumDiv.className = 'news-summary';
+    sumDiv.innerHTML = highlightText(a.summary||a.desc||a.title||'', query);
+    body.appendChild(sumDiv);
+
+    if(hasLink){
+      var lnk = document.createElement('a');
+      lnk.href=a.link; lnk.target='_blank'; lnk.rel='noopener noreferrer';
+      lnk.className='read-link'; lnk.textContent='📰 पूरी खबर पढ़ें ↗';
+      body.appendChild(lnk);
+      var tip = document.createElement('div');
+      tip.className='translate-note';
+      tip.innerHTML='💡 Chrome में <b>Right Click → Translate to Hindi</b>';
+      body.appendChild(tip);
+    }
+    card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function toggleSearchCard(id){
+  var body = document.getElementById('snbody-'+id);
+  var btn = document.getElementById('sebtn-'+id);
+  if(!body) return;
+  var open = body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  body.style.display = open?'none':'block';
+  if(btn) btn.textContent = open?'▾ विवरण देखें':'▴ छुपाएं';
+}
+
+function clearSearch(){
+  var inp = document.getElementById('search-input');
+  if(inp) inp.value = '';
+  SEARCH_QUERY = '';
+  var clearBtn = document.getElementById('search-clear');
+  var stats = document.getElementById('search-stats');
+  if(clearBtn) clearBtn.style.display='none';
+  if(stats) stats.style.display='none';
+  renderNews();
+}
+
+// ── Summary ──
+function renderSummary(){
+  var sum=DATA.sum;
+  document.getElementById('sum-banner').textContent=sum.ms;
+  var cards=[
+    {t:'✅ प्रमुख सकारात्मक',c:'#15803d',i:sum.kp},
+    {t:'⚠️ प्रमुख नकारात्मक',c:'#dc2626',i:sum.kn},
+    {t:'🔔 बड़ी चिंताएं',c:'#b45309',i:sum.mc},
+    {t:'📈 उभरते रुझान',c:'#4338ca',i:sum.et},
+  ];
+  var html='';
+  cards.forEach(function(x){
+    html+='<div class="sum-card" style="border-top:3px solid '+x.c+'">';
+    html+='<div class="sum-card-title" style="color:'+x.c+'">'+x.t+'</div>';
+    if(x.i&&x.i.length){x.i.forEach(function(it){html+='<div class="sum-item"><div class="sum-dot" style="background:'+x.c+'"></div><div class="sum-text">'+escHtml(it)+'</div></div>';});}
+    else{html+='<div class="sum-text" style="color:#9ca3af">कोई रिपोर्ट नहीं</div>';}
+    html+='</div>';
+  });
+  document.getElementById('sum-grid').innerHTML=html;
+}
+
+// ── News ──
+function sevBadge(s){return s==='गंभीर'?'b-crit':s==='उच्च'?'b-high':s==='मध्यम'?'b-med':'b-low';}
+
+function renderNews(){
+  if(!DATA)return;
+  var fs=document.getElementById('f-sent').value;
+  var fc=document.getElementById('f-cat').value;
+  var fv=document.getElementById('f-sev').value;
+  var arts=DATA.articles.filter(function(a){
+    if(fs&&a.sentiment!==fs)return false;
+    if(fc&&a.category!==fc)return false;
+    if(fv&&a.severity!==fv)return false;
+    return true;
+  });
+  document.getElementById('news-count').textContent=arts.length+' खबरें';
+  var list=document.getElementById('news-list');
+  list.innerHTML='';
+  arts.forEach(function(a,i){
+    var cls=a.sentiment==='सकारात्मक'?'pos':a.sentiment==='नकारात्मक'?'neg':'neu';
+    var bsent=a.sentiment==='सकारात्मक'?'b-pos':a.sentiment==='नकारात्मक'?'b-neg':'b-neu';
+    var score=a.score>0?'+'+a.score:String(a.score);
+    var hasLink=a.link&&a.link.startsWith('http');
+
+    var card=document.createElement('div');
+    card.className='news-card '+cls+' fade-in';
+
+    // Check for breaking/keyword match and style card
+    var fullText = a.title+' '+a.summary;
+    var isBreakingNews = isBreaking(fullText) || a.severity==='गंभीर';
+    var kwHit = matchesUserKW(fullText);
+    if(isBreakingNews) card.className='news-card breaking fade-in';
+    else if(kwHit) card.className='news-card kw-match fade-in';
+
+    var title=document.createElement('div');
+    title.className='news-title';
+    title.textContent=a.title;
+    title.onclick=function(){toggleNews(i);};
+    card.appendChild(title);
+
+    var badges=document.createElement('div');
+    badges.className='news-badges';
+    var extraBadges='';
+    if(isBreakingNews) extraBadges+='<span class="badge badge-breaking">🔴 BREAKING</span>';
+    if(kwHit) extraBadges+='<span class="badge badge-kw">🟣 '+kwHit.toUpperCase()+'</span>';
+    badges.innerHTML=extraBadges
+      +'<span class="badge '+bsent+'">'+a.sentiment+' ('+score+')</span>'
+      +'<span class="badge '+sevBadge(a.severity)+'">'+a.severity+'</span>'
+      +'<span class="badge b-cat">'+a.category+'</span>'
+      +'<span class="badge b-dist">'+a.district+'</span>';
+    card.appendChild(badges);
+
+    var meta=document.createElement('div');
+    meta.className='news-meta';
+    meta.textContent=a.source+(a.pubTime?' · '+a.pubTime:'');
+    card.appendChild(meta);
+
+    var expBtn=document.createElement('button');
+    expBtn.className='expand-btn';
+    expBtn.id='ebtn-'+i;
+    expBtn.textContent='▾ विवरण देखें';
+    expBtn.onclick=function(){toggleNews(i);};
+    card.appendChild(expBtn);
+
+    var body=document.createElement('div');
+    body.className='news-body';
+    body.id='nbody-'+i;
+
+    var sumDiv=document.createElement('div');
+    sumDiv.className='news-summary';
+    sumDiv.textContent=a.summary;
+    body.appendChild(sumDiv);
+
+    if(hasLink){
+      var lnk=document.createElement('a');
+      lnk.href=a.link;lnk.target='_blank';lnk.rel='noopener noreferrer';
+      lnk.className='read-link';lnk.textContent='📰 पूरी खबर पढ़ें ↗';
+      body.appendChild(lnk);
+      var tip=document.createElement('div');
+      tip.className='translate-note';
+      tip.innerHTML='💡 <b>हिंदी में पढ़ने के लिए:</b> Chrome में खबर खुलने पर Right Click → "Translate to Hindi" करें।';
+      body.appendChild(tip);
+    }else{
+      var nl=document.createElement('div');
+      nl.style.cssText='font-size:12px;color:#9ca3af;font-style:italic;';
+      nl.textContent='सीधा लिंक उपलब्ध नहीं';
+      body.appendChild(nl);
+    }
+    card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function toggleNews(i){
+  var body=document.getElementById('nbody-'+i);
+  var btn=document.getElementById('ebtn-'+i);
+  if(!body)return;
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  body.style.display=open?'none':'block';
+  if(btn)btn.textContent=open?'▾ विवरण देखें':'▴ छुपाएं';
+}
+
+// ── Generic card renderer (used by Social + Print tabs) ──
+function renderCardList(arts,listId,prefix){
+  var list=document.getElementById(listId);
+  list.innerHTML='';
+  arts.forEach(function(a,i){
+    var cls=a.sentiment==='सकारात्मक'?'pos':a.sentiment==='नकारात्मक'?'neg':'neu';
+    var bsent=a.sentiment==='सकारात्मक'?'b-pos':a.sentiment==='नकारात्मक'?'b-neg':'b-neu';
+    var score=a.score>0?'+'+a.score:String(a.score);
+    var hasLink=a.link&&a.link.startsWith('http');
+
+    var card=document.createElement('div');
+    card.className='news-card '+cls+' fade-in';
+
+    var title=document.createElement('div');
+    title.className='news-title';
+    title.textContent=a.title;
+    title.onclick=function(){toggleCard(prefix,i);};
+    card.appendChild(title);
+
+    var badges=document.createElement('div');
+    badges.className='news-badges';
+    badges.innerHTML='<span class="badge '+bsent+'">'+a.sentiment+' ('+score+')</span>'
+      +'<span class="badge '+sevBadge(a.severity)+'">'+a.severity+'</span>'
+      +'<span class="badge b-cat">'+a.category+'</span>'
+      +'<span class="badge b-dist">'+a.district+'</span>';
+    card.appendChild(badges);
+
+    var meta=document.createElement('div');
+    meta.className='news-meta';
+    meta.textContent=a.source+(a.pubTime?' · '+a.pubTime:'');
+    card.appendChild(meta);
+
+    var expBtn=document.createElement('button');
+    expBtn.className='expand-btn';
+    expBtn.id=prefix+'-ebtn-'+i;
+    expBtn.textContent='▾ विवरण देखें';
+    expBtn.onclick=function(){toggleCard(prefix,i);};
+    card.appendChild(expBtn);
+
+    var body=document.createElement('div');
+    body.className='news-body';
+    body.id=prefix+'-nbody-'+i;
+
+    var sumDiv=document.createElement('div');
+    sumDiv.className='news-summary';
+    sumDiv.textContent=a.summary;
+    body.appendChild(sumDiv);
+
+    if(hasLink){
+      var lnk=document.createElement('a');
+      lnk.href=a.link;lnk.target='_blank';lnk.rel='noopener noreferrer';
+      lnk.className='read-link';lnk.textContent='📰 पूरी खबर पढ़ें ↗';
+      body.appendChild(lnk);
+      var tip=document.createElement('div');
+      tip.className='translate-note';
+      tip.innerHTML='💡 <b>हिंदी में पढ़ने के लिए:</b> Chrome में खबर खुलने पर Right Click → "Translate to Hindi" करें।';
+      body.appendChild(tip);
+    }else{
+      var nl=document.createElement('div');
+      nl.style.cssText='font-size:12px;color:#9ca3af;font-style:italic;';
+      nl.textContent='सीधा लिंक उपलब्ध नहीं';
+      body.appendChild(nl);
+    }
+    card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function toggleCard(prefix,i){
+  var body=document.getElementById(prefix+'-nbody-'+i);
+  var btn=document.getElementById(prefix+'-ebtn-'+i);
+  if(!body)return;
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  body.style.display=open?'none':'block';
+  if(btn)btn.textContent=open?'▾ विवरण देखें':'▴ छुपाएं';
+}
+
+function renderSocial(){
+  if(!DATA)return;
+  var arts=DATA.socialArticles||[];
+  document.getElementById('social-count').textContent=arts.length+' सोशल मीडिया चर्चा (पिछले 24 घंटे)';
+  renderCardList(arts,'social-list','soc');
+  if(arts.length===0){
+    document.getElementById('social-list').innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">पिछले 24 घंटे में कोई सोशल मीडिया चर्चा वाली UP खबर नहीं मिली। थोड़ी देर बाद फिर कोशिश करें।</div>';
+  }
+}
+
+function renderPrint(){
+  if(!DATA)return;
+  var arts=DATA.printArticles||[];
+  document.getElementById('print-count').textContent=arts.length+' प्रिंट संस्करण खबरें (पिछले 48 घंटे)';
+  renderCardList(arts,'print-list','prt');
+  if(arts.length===0){
+    document.getElementById('print-list').innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">पिछले 48 घंटे में कोई प्रिंट संस्करण खबर नहीं मिली। थोड़ी देर बाद फिर कोशिश करें।</div>';
+  }
+}
+
+function renderRSSNational(){
+  if(!DATA)return;
+  var arts=DATA.rssNatArticles||[];
+  document.getElementById('rssnational-count').textContent=arts.length+' RSS राष्ट्रीय खबरें/कार्यक्रम (पिछले 7 दिन)';
+  renderCardList(arts,'rssnational-list','rssnat');
+  if(arts.length===0){
+    document.getElementById('rssnational-list').innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">पिछले 7 दिनों में RSS राष्ट्रीय स्तर की कोई खबर/कार्यक्रम नहीं मिला।</div>';
+  }
+}
+
+function renderRSSAwadh(){
+  if(!DATA)return;
+  var arts=DATA.rssAwadhArticles||[];
+  document.getElementById('rssawadh-count').textContent=arts.length+' RSS अवध प्रांत खबरें/कार्यक्रम (पिछले 7 दिन)';
+  renderCardList(arts,'rssawadh-list','rssawadh');
+  if(arts.length===0){
+    document.getElementById('rssawadh-list').innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">पिछले 7 दिनों में RSS अवध प्रांत की कोई खबर/कार्यक्रम नहीं मिला। अवध प्रांत में लखनऊ, अयोध्या, प्रयागराज, वाराणसी आते हैं।</div>';
+  }
+}
+
+// ── Special ──
+var ICONS={'हिंदू, हिन्दुत्व, धर्म संस्कृति':'🕉️','गो, गंगा-गीता, वेद-पुराण':'🐄','मुगल-मुस्लिम-इस्लाम':'📜','जनसंख्या-डेमोग्राफिक चेंज':'📊','जम्मू-कश्मीर':'🏔️','राष्ट्रीय एकता':'🇮🇳','मंदिर-धरोहर':'🛕','महापुरुष-इतिहास':'📚','शिक्षा-भाषा':'🎓','गाँव-खेती-किसानी':'🌾','श्रीराम मंदिर/अयोध्या':'🛕','पर्यावरण संरक्षण-प्रकृति':'🌿','समाज, सामाजिक समरसता':'🤝','विभाजन की विभीषिका':'⚡','तिरंगा, संविधान दिवस':'🏳️','कुटुंब प्रबोधन, विवाह':'👨‍👩‍👧‍👦','मॉब लिंचिंग, हिंसा':'⚠️','RSS, स्वयंसेवक':'🏮','भविष्य का भारत':'🚀','CAA नागरिकता संशोधन':'📋','भारतीय अखंडता, शौर्य, सेना':'⚔️','मोपला नरसंहार':'📜','आतंकवाद-नक्सलवाद':'🚨','अखंड भारत':'🗺️','आत्मनिर्भर, स्वावलंबन':'💪','आरक्षण':'⚖️','CHINA':'🐉','नारी शक्ति':'👩','रोजगार, युवा':'💼','स्वास्थ्य-योग/आयुर्वेद':'🧘','कन्वर्जन-ईसाई मिशनरी':'⛪','हलाल':'🔖','भगवा ध्वज, गुरु पूर्णिमा':'🚩','स्वाधीनता का अमृत महोत्सव':'🎆','आद्य सरसंघचालक डॉ. हेडगेवार':'👤','श्रद्धेय दत्तोपंत ठेंगड़ी':'👤','स्वामी विवेकानंद':'🌅','महर्षि अरविन्द':'🌟','वीर सावरकर':'⚔️','श्री गुरूजी':'🙏','लव जिहाद/मतांतरण':'⚠️','गीता जयंती':'📖','पू. सरसंघचालक डॉ. मोहन भागवत':'👤','मा. सरकार्यवाह दत्तात्रेय होसबाले':'👤','छत्रपति शिवाजी/हिंदू स्वराज्य दिवस':'⚔️','आपातकाल':'📰','सामाजिक समरसता':'🤝','जनजाति/वनवासी समाज':'🌲'};
+
+function renderSpecial(){
+  if(!DATA)return;
+  var sg=DATA.specialGrouped;
+  var topicCount=Object.keys(sg).length;
+  var total=Object.values(sg).reduce(function(a,b){return a+b.length;},0);
+  document.getElementById('special-badge').textContent=topicCount+' विषय · '+total+' खबरें';
+  var cont=document.getElementById('topics-container');
+  cont.innerHTML='';
+
+  if(topicCount===0||total===0){
+    cont.innerHTML='<div style="text-align:center;padding:40px 20px;color:#9ca3af">'
+      +'<div style="font-size:36px;margin-bottom:10px">🔍</div>'
+      +'<div style="font-size:14px;font-weight:600;color:#374151;margin-bottom:6px">विशेष विषयों की खबरें नहीं मिलीं</div>'
+      +'<div style="font-size:13px">Google News से data आने में समय लग सकता है।<br>कुछ देर बाद <b>"↺ अपडेट"</b> बटन दबाएं।</div>'
+      +'</div>';
+    return;
+  }
+
+  Object.entries(sg).forEach(function(entry,gi){
+    var label=entry[0],arts=entry[1];
+    if(!arts||!arts.length)return;
+    var icon=ICONS[label]||'📌';
+
+    // Row wrapper
+    var row=document.createElement('div');
+    row.className='topic-row';
+
+    // Header (clickable)
+    var hdr=document.createElement('div');
+    hdr.className='topic-header';
+    hdr.innerHTML='<span class="topic-icon">'+icon+'</span>'
+      +'<span class="topic-name">'+escHtml(label)+'</span>'
+      +'<span class="topic-count">'+arts.length+' खबरें</span>'
+      +'<span class="topic-arrow" id="tarrow-'+gi+'">▾</span>';
+    hdr.onclick=function(){toggleTopic(gi);};
+    row.appendChild(hdr);
+
+    // Articles container
+    var artsCont=document.createElement('div');
+    artsCont.className='topic-articles';
+    artsCont.id='tarts-'+gi;
+
+    arts.forEach(function(a,ai){
+      var cls=a.sentiment==='सकारात्मक'?'pos':a.sentiment==='नकारात्मक'?'neg':'neu';
+      var bsent=a.sentiment==='सकारात्मक'?'b-pos':a.sentiment==='नकारात्मक'?'b-neg':'b-neu';
+      var hasLink=a.link&&a.link.startsWith('http');
+
+      var artCard=document.createElement('div');
+      artCard.className='topic-art-card '+cls;
+
+      var atitle=document.createElement('div');
+      atitle.className='topic-art-title';
+      atitle.textContent=a.title;
+      atitle.onclick=function(){toggleTopicArt(gi,ai);};
+      artCard.appendChild(atitle);
+
+      var abadges=document.createElement('div');
+      abadges.className='topic-art-badges';
+      abadges.innerHTML='<span class="badge '+bsent+'" style="font-size:10px">'+a.sentiment+'</span>'
+        +'<span class="badge b-cat" style="font-size:10px">'+a.category+'</span>';
+      artCard.appendChild(abadges);
+
+      var ameta=document.createElement('div');
+      ameta.className='topic-art-meta';
+      ameta.textContent=a.source+(a.pubTime?' · '+a.pubTime:'');
+      artCard.appendChild(ameta);
+
+      var aexpBtn=document.createElement('button');
+      aexpBtn.className='expand-btn';
+      aexpBtn.id='tebtn-'+gi+'-'+ai;
+      aexpBtn.textContent='▾ देखें';
+      aexpBtn.onclick=function(){toggleTopicArt(gi,ai);};
+      artCard.appendChild(aexpBtn);
+
+      var abody=document.createElement('div');
+      abody.className='topic-art-body';
+      abody.id='tabody-'+gi+'-'+ai;
+
+      var asum=document.createElement('div');
+      asum.className='topic-art-sum';
+      asum.textContent=a.summary;
+      abody.appendChild(asum);
+
+      if(hasLink){
+        var alnk=document.createElement('a');
+        alnk.href=a.link;alnk.target='_blank';alnk.rel='noopener noreferrer';
+        alnk.className='read-link';
+        alnk.style.cssText='font-size:12px;padding:7px 14px;margin-top:8px;';
+        alnk.textContent='📰 पूरी खबर पढ़ें ↗';
+        abody.appendChild(alnk);
+        var atip=document.createElement('div');
+        atip.className='translate-note';
+        atip.style.cssText='font-size:11px;padding:8px 11px;margin-top:6px;';
+        atip.innerHTML='💡 Chrome में <b>Right Click → Translate to Hindi</b>';
+        abody.appendChild(atip);
+      }
+      artCard.appendChild(abody);
+      artsCont.appendChild(artCard);
+    });
+
+    row.appendChild(artsCont);
+    cont.appendChild(row);
+  });
+}
+
+function toggleTopic(gi){
+  var cont=document.getElementById('tarts-'+gi);
+  var arrow=document.getElementById('tarrow-'+gi);
+  if(!cont)return;
+  var open=cont.classList.contains('open');
+  cont.classList.toggle('open',!open);
+  cont.style.display=open?'none':'block';
+  if(arrow)arrow.textContent=open?'▾':'▴';
+}
+
+function toggleTopicArt(gi,ai){
+  var body=document.getElementById('tabody-'+gi+'-'+ai);
+  var btn=document.getElementById('tebtn-'+gi+'-'+ai);
+  if(!body)return;
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  body.style.display=open?'none':'block';
+  if(btn)btn.textContent=open?'▾ देखें':'▴ छुपाएं';
+}
+
+// ── Analytics ──
+function renderAnalytics(){
+  var an=DATA.an,tot=an.total;
+  function mkBar(l,c,col){
+    var p=tot>0?Math.round(c/tot*100):0;
+    return '<div class="bar-row"><div class="bar-label" title="'+escHtml(l)+'">'+escHtml(l)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+p+'%;background:'+col+'"></div></div><div class="bar-num">'+c+'</div></div>';
+  }
+  var r=52,cx=60,cy=60,ci=2*Math.PI*r;
+  var segs=[{p:an.pp,c:'#16a34a'},{p:an.np,c:'#dc2626'},{p:an.nup,c:'#94a3b8'}];
+  var off=0;
+  var paths=segs.filter(function(s){return s.p>0;}).map(function(s){
+    var d=ci*s.p/100,g=ci-d;
+    var el='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.c+'" stroke-width="14" stroke-dasharray="'+d+' '+g+'" stroke-dashoffset="'+(-off*ci/100)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+    off+=s.p;return el;
+  }).join('');
+
+  document.getElementById('an-grid').innerHTML=
+    '<div class="an-card"><div class="an-title">भावना वितरण</div><div class="donut-wrap"><svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="#f3f4f6" stroke-width="14"/>'+paths+'</svg><div class="legend"><div class="leg-row"><div class="leg-dot" style="background:#16a34a"></div><div class="leg-label">सकारात्मक</div><div class="leg-val" style="color:#15803d">'+an.pos+' ('+an.pp+'%)</div></div><div class="leg-row"><div class="leg-dot" style="background:#dc2626"></div><div class="leg-label">नकारात्मक</div><div class="leg-val" style="color:#dc2626">'+an.neg+' ('+an.np+'%)</div></div><div class="leg-row"><div class="leg-dot" style="background:#94a3b8"></div><div class="leg-label">तटस्थ</div><div class="leg-val" style="color:#64748b">'+an.neu+' ('+an.nup+'%)</div></div></div></div></div>'+
+    '<div class="an-card"><div class="an-title">गंभीरता स्तर</div>'+mkBar('गंभीर',an.sev['गंभीर'],'#dc2626')+mkBar('उच्च',an.sev['उच्च'],'#ea580c')+mkBar('मध्यम',an.sev['मध्यम'],'#d97706')+mkBar('सामान्य',an.sev['सामान्य'],'#16a34a')+'</div>'+
+    '<div class="an-card"><div class="an-title">श्रेणी वितरण</div>'+an.cats.map(function(x){return mkBar(x.c,x.n,'#f97316');}).join('')+'</div>'+
+    '<div class="an-card"><div class="an-title">प्रमुख जिले</div>'+an.dists.map(function(x){return mkBar(x.d,x.c,'#4338ca');}).join('')+'</div>';
+}
+
+// ── Issues ──
+function renderIssues(){
+  var sum=DATA.sum;
+  var html='';
+  html+='<div class="issue-card"><div class="issue-title">🎯 प्रमुख मुद्दे</div>'+(sum.ti||[]).map(function(iss,i){return'<div class="issue-item"><div class="issue-num">'+(i+1)+'</div><div class="issue-text">'+escHtml(iss)+'</div></div>';}).join('')+'</div>';
+  html+='<div class="issue-card"><div class="issue-title">💡 सुझाव</div>'+(sum.rec||[]).map(function(r){return'<div class="rec-item"><div class="rec-arrow">→</div><div class="issue-text">'+escHtml(r)+'</div></div>';}).join('')+'</div>';
+  html+='<div class="issue-card"><div class="issue-title">🏁 मुख्य निष्कर्ष</div>'+(sum.kt||[]).map(function(t,i){return'<div class="issue-item"><div class="issue-num" style="background:#eef2ff;border-color:#c7d2fe;color:#4338ca">'+(i+1)+'</div><div class="issue-text">'+escHtml(t)+'</div></div>';}).join('')+'</div>';
+  document.getElementById('issues-grid').innerHTML=html;
+}
+
+// ── Utils ──
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Download ──
+function downloadReport(){
+  if(!DATA)return;
+  var d=DATA,an=d.an,sum=d.sum;
+  function mkBar(l,c,tot,col){var p=tot>0?Math.round(c/tot*100):0;return'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:110px;font-size:12px;color:#374151;flex-shrink:0">'+l+'</div><div style="flex:1;height:6px;background:#f3f4f6;border-radius:3px;overflow:hidden"><div style="width:'+p+'%;height:100%;background:'+col+';border-radius:3px"></div></div><div style="font-size:12px;font-weight:600;min-width:22px;text-align:right">'+c+'</div></div>';}
+  var artH=d.articles.map(function(a){
+    var sc=a.sentiment==='सकारात्मक'?'#15803d':a.sentiment==='नकारात्मक'?'#dc2626':'#64748b';
+    var sv=a.severity==='गंभीर'?'#dc2626':a.severity==='उच्च'?'#ea580c':a.severity==='मध्यम'?'#d97706':'#15803d';
+    return'<div style="border:1px solid #e5e7eb;border-left:4px solid '+sc+';border-radius:8px;padding:14px;margin-bottom:10px;background:white"><div style="font-weight:600;font-size:14px;margin-bottom:8px;line-height:1.65;color:#1a1a1a">'+a.title+'</div><div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px"><span style="background:'+sc+'15;color:'+sc+';border:1px solid '+sc+'30;border-radius:20px;padding:2px 9px;font-size:11px;font-weight:600">'+a.sentiment+'</span><span style="background:'+sv+'15;color:'+sv+';border-radius:20px;padding:2px 9px;font-size:11px">'+a.severity+'</span><span style="background:#fff7ed;color:#c2410c;border-radius:20px;padding:2px 9px;font-size:11px">'+a.category+'</span><span style="background:#eef2ff;color:#4338ca;border-radius:20px;padding:2px 9px;font-size:11px">'+a.district+'</span><span style="font-size:11px;color:#9ca3af">'+a.source+'</span></div><div style="font-size:14px;color:#374151;line-height:1.75">'+a.summary+'</div>'+(a.link&&a.link.startsWith('http')?'<a href="'+a.link+'" style="font-size:12px;color:#c2410c;font-weight:600;text-decoration:none;margin-top:6px;display:inline-block">📰 पूरी खबर ↗</a>':'')+'</div>';
+  }).join('');
+
+  var html='<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><title>यूपी रिपोर्ट '+d.rd+'</title><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans Devanagari",sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px}.pg{max-width:960px;margin:0 auto;padding:24px}.cv{background:linear-gradient(135deg,#7c2d12,#c2410c,#ea580c);color:white;padding:30px;border-radius:12px;margin-bottom:16px}.cv h1{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;margin-bottom:5px}.sec{background:white;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:13px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.sh{padding:13px 18px;border-bottom:1px solid #f3f4f6;font-weight:700;font-size:15px}.sb{padding:16px}.sg{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sc{border:1px solid #e5e7eb;border-radius:8px;padding:12px}.sct{font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:9px}.sci{display:flex;gap:7px;margin-bottom:8px;font-size:13px;color:#374151;line-height:1.65}.scd{width:5px;height:5px;border-radius:50%;margin-top:9px;flex-shrink:0}.ban{background:#fff7ed;border-left:4px solid #f97316;padding:12px 16px;border-radius:6px;font-size:14px;color:#7c2d12;line-height:1.8;margin-bottom:13px}.sts{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}.st{flex:1;min-width:100px;background:white;border:1px solid #e5e7eb;border-radius:8px;padding:12px;text-align:center}.sn{font-family:"Syne",sans-serif;font-size:22px;font-weight:700}.sl{font-size:11px;color:#9ca3af;margin-top:2px}.ft{text-align:center;font-size:12px;color:#9ca3af;padding:13px;border-top:1px solid #e5e7eb;margin-top:13px}@media print{body{background:white}}</style></head><body><div class="pg"><div class="cv"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.75;margin-bottom:9px">सरकारी मीडिया इंटेलिजेंस · Apoorv</div><h1>उत्तर प्रदेश दैनिक मीडिया मॉनिटरिंग रिपोर्ट</h1><p style="opacity:.85;margin-bottom:14px">'+d.rd+' · पिछले 12 घंटे</p><div style="display:flex;gap:20px;flex-wrap:wrap"><div><div style="font-size:10px;opacity:.65;text-transform:uppercase">रिपोर्ट ID</div><div style="font-size:12px;margin-top:2px">'+d.rid+'</div></div><div><div style="font-size:10px;opacity:.65;text-transform:uppercase">समय</div><div style="font-size:12px;margin-top:2px">'+d.ts+'</div></div><div><div style="font-size:10px;opacity:.65;text-transform:uppercase">भावना</div><div style="font-size:12px;margin-top:2px">'+sum.os+'</div></div><div><div style="font-size:10px;opacity:.65;text-transform:uppercase">निर्मित</div><div style="font-size:12px;margin-top:2px">Apoorv</div></div></div></div><div class="sts"><div class="st"><div class="sn" style="color:#c2410c">'+an.total+'</div><div class="sl">कुल खबरें</div></div><div class="st"><div class="sn" style="color:#15803d">'+an.pos+'</div><div class="sl">सकारात्मक '+an.pp+'%</div></div><div class="st"><div class="sn" style="color:#dc2626">'+an.neg+'</div><div class="sl">नकारात्मक '+an.np+'%</div></div><div class="st"><div class="sn" style="color:#64748b">'+an.neu+'</div><div class="sl">तटस्थ</div></div><div class="st"><div class="sn" style="color:#dc2626">'+an.sev['गंभीर']+'</div><div class="sl">गंभीर</div></div><div class="st"><div class="sn" style="color:#ea580c">'+an.sev['उच्च']+'</div><div class="sl">उच्च</div></div></div><div class="sec"><div class="sh">📋 कार्यकारी सारांश</div><div class="sb">'+(sum.ms?'<div class="ban">'+sum.ms+'</div>':'')+'<div class="sg"><div class="sc"><div class="sct" style="color:#15803d">✅ सकारात्मक</div>'+(sum.kp||[]).map(function(p){return'<div class="sci"><div class="scd" style="background:#15803d"></div><div>'+p+'</div></div>';}).join('')+'</div><div class="sc"><div class="sct" style="color:#dc2626">⚠️ नकारात्मक</div>'+(sum.kn||[]).map(function(p){return'<div class="sci"><div class="scd" style="background:#dc2626"></div><div>'+p+'</div></div>';}).join('')+'</div><div class="sc"><div class="sct" style="color:#b45309">🔔 चिंताएं</div>'+(sum.mc||[]).map(function(p){return'<div class="sci"><div class="scd" style="background:#b45309"></div><div>'+p+'</div></div>';}).join('')+'</div><div class="sc"><div class="sct" style="color:#4338ca">📈 रुझान</div>'+(sum.et||[]).map(function(p){return'<div class="sci"><div class="scd" style="background:#4338ca"></div><div>'+p+'</div></div>';}).join('')+'</div></div></div></div><div class="sec"><div class="sh">📰 सभी यूपी खबरें ('+an.total+')</div><div class="sb">'+artH+'</div></div><div class="sec"><div class="sh">📊 Analytics</div><div class="sb"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px"><div style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:10px">भावना</div>'+mkBar('सकारात्मक',an.pos,an.total,'#16a34a')+mkBar('नकारात्मक',an.neg,an.total,'#dc2626')+mkBar('तटस्थ',an.neu,an.total,'#64748b')+'</div><div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px"><div style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:10px">गंभीरता</div>'+mkBar('गंभीर',an.sev['गंभीर'],an.total,'#dc2626')+mkBar('उच्च',an.sev['उच्च'],an.total,'#ea580c')+mkBar('मध्यम',an.sev['मध्यम'],an.total,'#d97706')+mkBar('सामान्य',an.sev['सामान्य'],an.total,'#16a34a')+'</div><div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px"><div style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:10px">श्रेणियां</div>'+an.cats.map(function(x){return mkBar(x.c,x.n,an.total,'#f97316');}).join('')+'</div><div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px"><div style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:10px">जिले</div>'+an.dists.map(function(x){return mkBar(x.d,x.c,an.total,'#4338ca');}).join('')+'</div></div></div></div><div class="ft">यूपी मीडिया मॉनिटर · Apoorv · '+d.rid+' · '+d.ts+' · Google News · पिछले 12 घंटे · आधिकारिक उपयोग</div></div></body></html>';
+
+  var blob=new Blob([html],{type:'text/html'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='UP_Report_Apoorv_'+d.ds+'.html';
+  a.click();
+}
+
+// ── Sample ──
+function loadSample(){
+  var arts=[
+    {title:'सीएम योगी ने बुंदेलखंड एक्सप्रेसवे का उद्घाटन किया',source:'दैनिक जागरण',link:'https://www.jagran.com',pubDate:new Date().toISOString(),pubTime:'आज 6:30',district:'झांसी',category:'विकास',sentiment:'सकारात्मक',score:82,severity:'सामान्य',summary:'मुख्यमंत्री योगी आदित्यनाथ ने झांसी से चित्रकूट तक 88 किमी बुंदेलखंड एक्सप्रेसवे का उद्घाटन किया। ₹2400 करोड़ की इस परियोजना से यात्रा 40% तेज होगी।'},
+    {title:'लखनऊ में साइबर ठगी गिरोह गिरफ्तार, ₹85 लाख बरामद',source:'अमर उजाला',link:'https://www.amarujala.com',pubDate:new Date().toISOString(),pubTime:'आज 7:10',district:'लखनऊ',category:'कानून व्यवस्था',sentiment:'नकारात्मक',score:-68,severity:'उच्च',summary:'यूपी साइबर सेल ने बुजुर्गों से ₹85 लाख की ठगी करने वाले तीन आरोपियों को गिरफ्तार किया।'},
+    {title:'गोरखपुर को ₹500 करोड़ का एम्स सैटेलाइट केंद्र मिला',source:'हिंदुस्तान',link:'https://www.livehindustan.com',pubDate:new Date().toISOString(),pubTime:'आज 8:00',district:'गोरखपुर',category:'स्वास्थ्य',sentiment:'सकारात्मक',score:75,severity:'सामान्य',summary:'पूर्वी यूपी के 3 करोड़ लोगों को उन्नत स्वास्थ्य सेवा मिलेगी।'},
+    {title:'यमुना एक्सप्रेसवे पर दुर्घटना, 6 की मौत',source:'नवभारत',link:'https://navbharattimes.indiatimes.com',pubDate:new Date().toISOString(),pubTime:'आज 5:20',district:'आगरा',category:'कानून व्यवस्था',sentiment:'नकारात्मक',score:-85,severity:'उच्च',summary:'ट्रक-बस टक्कर में 6 मृत, 14 घायल। ब्रेक फेल की आशंका।'},
+    {title:'यूपी कारोबार सुगमता में देश में दूसरा स्थान',source:'भास्कर',link:'https://www.bhaskar.com',pubDate:new Date().toISOString(),pubTime:'आज 9:00',district:'सम्पूर्ण यूपी',category:'अर्थव्यवस्था',sentiment:'सकारात्मक',score:91,severity:'सामान्य',summary:'BRAP 2024 में दूसरा स्थान। Q1 2025 में ₹40,000 करोड़ निवेश।'},
+    {title:'वाराणसी में काशी विश्वनाथ कॉरिडोर विस्तार',source:'दैनिक जागरण',link:'https://www.jagran.com',pubDate:new Date().toISOString(),pubTime:'आज 10:00',district:'वाराणसी',category:'विकास',sentiment:'सकारात्मक',score:78,severity:'सामान्य',summary:'काशी विश्वनाथ मंदिर कॉरिडोर के दूसरे चरण में 200 करोड़ की लागत से नई सुविधाएं बनेंगी।'},
+    {title:'प्रयागराज में महाकुंभ तैयारियां जोरों पर',source:'अमर उजाला',link:'https://www.amarujala.com',pubDate:new Date().toISOString(),pubTime:'आज 11:00',district:'प्रयागराज',category:'शासन',sentiment:'सकारात्मक',score:70,severity:'सामान्य',summary:'महाकुंभ 2025 के लिए 10,000 करोड़ की परियोजनाएं पूरी होने वाली हैं।'},
+    {title:'मेरठ में किसान आंदोलन, राजमार्ग जाम',source:'हिंदुस्तान',link:'https://www.livehindustan.com',pubDate:new Date().toISOString(),pubTime:'आज 8:30',district:'मेरठ',category:'कृषि',sentiment:'नकारात्मक',score:-55,severity:'मध्यम',summary:'गन्ना किसानों ने बकाया भुगतान की मांग पर दिल्ली-मेरठ एक्सप्रेसवे जाम किया।'},
+    {title:'कानपुर में नया आईटी पार्क — 5000 नौकरियां',source:'भास्कर',link:'https://www.bhaskar.com',pubDate:new Date().toISOString(),pubTime:'आज 12:00',district:'कानपुर',category:'अर्थव्यवस्था',sentiment:'सकारात्मक',score:85,severity:'सामान्य',summary:'UP IT एवं Electronics विभाग ने कानपुर में 500 एकड़ IT पार्क की घोषणा की।'},
+    {title:'आगरा में डेंगू के मामले बढ़े, हाई अलर्ट',source:'अमर उजाला',link:'https://www.amarujala.com',pubDate:new Date().toISOString(),pubTime:'आज 7:45',district:'आगरा',category:'स्वास्थ्य',sentiment:'नकारात्मक',score:-60,severity:'उच्च',summary:'आगरा में एक हफ्ते में डेंगू के 200 से ज्यादा मामले। स्वास्थ्य विभाग ने हाई अलर्ट जारी किया।'},
+    {title:'नोएडा मेट्रो विस्तार को मंजूरी, 6 नए स्टेशन',source:'नवभारत टाइम्स',link:'https://navbharattimes.indiatimes.com',pubDate:new Date().toISOString(),pubTime:'आज 9:15',district:'नोएडा',category:'विकास',sentiment:'सकारात्मक',score:80,severity:'सामान्य',summary:'नोएडा मेट्रो का विस्तार ग्रेटर नोएडा वेस्ट तक होगा।'},
+    {title:'अयोध्या राम मंदिर में भक्तों की रिकॉर्ड संख्या',source:'दैनिक जागरण',link:'https://www.jagran.com',pubDate:new Date().toISOString(),pubTime:'आज 6:00',district:'अयोध्या',category:'शासन',sentiment:'सकारात्मक',score:90,severity:'सामान्य',summary:'राम मंदिर में प्रतिदिन 2 लाख से अधिक श्रद्धालु दर्शन कर रहे हैं।'},
+  ];
+  var sg={
+    'श्रीराम मंदिर/अयोध्या':[{title:'अयोध्या में राम मंदिर दर्शन के लिए रिकॉर्ड 5 लाख श्रद्धालु',source:'जागरण',link:'https://www.jagran.com',pubTime:'आज 10:00',category:'धर्म',sentiment:'सकारात्मक',score:85,severity:'सामान्य',summary:'इस सप्ताह 5 लाख श्रद्धालु दर्शन के लिए पहुंचे।'}],
+    'RSS, स्वयंसेवक':[{title:'RSS की अखिल भारतीय प्रतिनिधि सभा बैठक संपन्न',source:'दैनिक भास्कर',link:'https://www.bhaskar.com',pubTime:'आज 11:00',category:'सामाजिक',sentiment:'तटस्थ',score:0,severity:'सामान्य',summary:'वार्षिक बैठक में 1500 प्रतिनिधि शामिल।'}],
+    'नारी शक्ति':[{title:'यूपी में 10 लाख महिला SHG को ₹1000 करोड़ ऋण',source:'हिंदुस्तान',link:'https://www.livehindustan.com',pubTime:'आज 12:00',category:'सामाजिक कल्याण',sentiment:'सकारात्मक',score:80,severity:'सामान्य',summary:'महिला स्वयं सहायता समूहों को सस्ते ऋण।'}],
+    'CHINA':[{title:'भारत-चीन सीमा LAC पर तनाव कम',source:'TOI',link:'https://timesofindia.indiatimes.com',pubTime:'आज 9:00',category:'शासन',sentiment:'तटस्थ',score:0,severity:'मध्यम',summary:'भारत-चीन सीमा पर सैनिकों की वापसी जारी।'}],
+  };
+  var rssNatSample=[
+    {title:'RSS की राष्ट्रीय कार्यकारिणी बैठक दिल्ली में संपन्न',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 10:00',district:'सम्पूर्ण यूपी',category:'शासन',sentiment:'सकारात्मक',score:55,severity:'सामान्य',summary:'राष्ट्रीय स्वयंसेवक संघ की बैठक में मोहन भागवत ने मार्गदर्शन दिया।'},
+    {title:'मोहन भागवत ने RSS स्वयंसेवकों को दिया राष्ट्रसेवा संदेश',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 11:00',district:'सम्पूर्ण यूपी',category:'सामाजिक कल्याण',sentiment:'सकारात्मक',score:60,severity:'सामान्य',summary:'आरएसएस प्रमुख ने सम्मेलन में राष्ट्रसेवा और एकता पर जोर दिया।'},
+    {title:'RSS संघ शिक्षा वर्ग का आयोजन नागपुर में',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 3:00',district:'सम्पूर्ण यूपी',category:'शासन',sentiment:'सकारात्मक',score:50,severity:'सामान्य',summary:'वार्षिक संघ शिक्षा वर्ग में देशभर से हजारों स्वयंसेवक शामिल।'},
+  ];
+  var rssAwadhSample=[
+    {title:'RSS अवध प्रांत की बैठक लखनऊ में आयोजित',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 12:00',district:'लखनऊ',category:'शासन',sentiment:'सकारात्मक',score:50,severity:'सामान्य',summary:'अवध प्रांत के क्षेत्र प्रचारकों की बैठक में आगामी कार्यक्रमों पर चर्चा।'},
+    {title:'लखनऊ में RSS का विशाल संपर्क कार्यक्रम',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 2:00',district:'लखनऊ',category:'सामाजिक कल्याण',sentiment:'सकारात्मक',score:55,severity:'सामान्य',summary:'अवध क्षेत्र में RSS का जन-संपर्क अभियान।'},
+  ];
+  var socialSample=[
+    {title:'योगी सरकार की नई योजना सोशल मीडिया पर ट्रेंड',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 1:00',district:'सम्पूर्ण यूपी',category:'शासन',sentiment:'सकारात्मक',score:60,severity:'सामान्य',summary:'मुख्यमंत्री की नई घोषणा पर #YogiGovt ट्रेंड कर रहा है।'},
+    {title:'लखनऊ पुलिस वायरल वीडियो — सराहना',source:'Google News',link:'https://news.google.com',pubDate:new Date().toISOString(),pubTime:'आज 2:00',district:'लखनऊ',category:'कानून व्यवस्था',sentiment:'सकारात्मक',score:65,severity:'सामान्य',summary:'लखनऊ पुलिस का बुजुर्ग की मदद करने का वीडियो वायरल।'},
+  ];
+  var printSample=[
+    {title:'अमर उजाला: यूपी बोर्ड परीक्षा परिणाम घोषित',source:'अमर उजाला',link:'https://www.amarujala.com',pubDate:new Date().toISOString(),pubTime:'आज 8:00',district:'सम्पूर्ण यूपी',category:'शिक्षा',sentiment:'सकारात्मक',score:55,severity:'सामान्य',summary:'यूपी बोर्ड के 30 लाख छात्रों का परिणाम घोषित।'},
+    {title:'जागरण: कानपुर में नई फैक्ट्री — 5000 नौकरियां',source:'दैनिक जागरण',link:'https://www.jagran.com',pubDate:new Date().toISOString(),pubTime:'आज 9:30',district:'कानपुर',category:'अर्थव्यवस्था',sentiment:'सकारात्मक',score:60,severity:'सामान्य',summary:'नई औद्योगिक इकाई से सैकड़ों रोजगार।'},
+    {title:'हिंदुस्तान: वाराणसी में गंगा सफाई अभियान',source:'हिंदुस्तान',link:'https://www.livehindustan.com',pubDate:new Date().toISOString(),pubTime:'आज 10:30',district:'वाराणसी',category:'पर्यावरण',sentiment:'सकारात्मक',score:70,severity:'सामान्य',summary:'नमामि गंगे परियोजना में वाराणसी की सफाई में तेजी।'},
+  ];
+  var sum=genSummary(arts);  renderAll();
+  // Sample mein ek breaking news force karo demo ke liye
+  setTimeout(function(){
+    if(!ALERTS.length){
+      ALERTS=[{type:'breaking',title:'यमुना एक्सप्रेसवे पर दुर्घटना, 6 की मौत',source:'नवभारत',time:'आज 5:20',link:'',level:'high'}];
+      updateAlertBadge(1);
+      renderAlerts();
+      showToasts(ALERTS);
+    }
+  },1000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions."upnews"]
+  timeout = 26
+
+[functions."special"]
+  timeout = 26
+
+[functions."extras"]
+  timeout = 26
+
+[functions."global"]
+  timeout = 26
