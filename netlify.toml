@@ -13,3 +13,6 @@
 
 [functions."global"]
   timeout = 26
+
+[functions."auth"]
+  timeout = 10
