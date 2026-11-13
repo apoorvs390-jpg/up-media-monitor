@@ -38,14 +38,11 @@ function hi(t) {
 
 function clean(s) {
   if (!s) return "";
-  s = String(s).replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1");
-  // Decode entities FIRST (feeds send escaped HTML like &lt;a href=...&gt;), repeat for double-encoding
-  const dec = x => x.replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'").replace(/&amp;/g, "&");
-  for (let i = 0; i < 3; i++) { const d = dec(s); if (d === s) break; s = d; }
-  // THEN strip any tags that were hiding in the text
-  s = s.replace(/<\/?[a-zA-Z][^>]*>/g, " ");
-  return s.replace(/\s+/g, " ").trim();
+  return s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,"$1")
+    .replace(/<[^>]+>/g," ")
+    .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">")
+    .replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+    .replace(/\s+/g," ").trim();
 }
 
 function getLink(b) {
@@ -199,3 +196,6 @@ exports.handler = async () => {
     }),
   };
 };
+
+// ── Password protection (lib/guard.js) ──
+exports.handler = require("../../lib/guard.js").protect(exports.handler);
